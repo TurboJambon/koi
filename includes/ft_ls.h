@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/13 16:44:56 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/13 19:05:34 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,5 +76,7 @@ struct s_my_stats
 	char				*gid;
 	char				*uid;
 };
+
+int				ft_ls(char *file, t_uint flags);
 
 #endif
