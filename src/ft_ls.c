@@ -5,10 +5,11 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/05/12 16:34:58 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/12 18:13:21 by dchirol          ###   ########.fr       */
+/*   Created: 2056/07/13 85:09:53 by dchirol           #+#    #+#             */
+/*   Updated: 2017/05/13 17:26:48 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include <stdio.h>
 #include "ft_ls.h"
@@ -20,7 +21,8 @@ void			ft_affarg(char **av, int ac)
 	i = 0;
 	while (i < ac)
 	{
-		ft_putendl(av[i]);
+		if (av[i])
+			ft_putendl(av[i]);
 		i++;
 	}
 }
@@ -34,7 +36,14 @@ int				ft_ls(char *s, t_uint prout)
 
 int				is_folder(char *name)
 {
-	return (name[0] == 'Z');
+	t_stat 		stats;
+
+	if (lstat(name, &stats) == -1)
+	{
+		perror(NULL);
+		return (-1);
+	}
+	return (S_ISDIR(stats.st_mode));
 }
 
 void			ft_swaptab(char **s1, char **s2)
@@ -48,15 +57,15 @@ void			ft_swaptab(char **s1, char **s2)
 
 void			sort_str(char **av, int size)
 {
-	int i;
 	int flag;
+	int i;
 
 	flag = 1;
 	while (flag)
 	{
 		i = 0;
 		flag = 0;
-		while (i < size)
+		while (i < size - 1)
 		{
 			if (ft_strcmp(av[i], av[i + 1]) > 0)
 			{
@@ -66,37 +75,42 @@ void			sort_str(char **av, int size)
 			i++;
 		}
 	}
-
 }
 
-void			sort_params(char **av, int ac)
+char			**sort_params(char **av, int ac)
 {
-	int i;
-	int j;
+	int		i;
+	int		start;
+	int		end;
+	char	**avbis;
+	int		tmp;
 
+	if (!(avbis = (char **)malloc(sizeof(*avbis) * ac)))
+		return (NULL);
+	start = 0;
+	end = ac - 1;
 	i = 0;
-	j = ac - 1;
-
-	while (i < ac && !is_folder(av[i]))
-		i++;
-	while (j >= 0 && is_folder(av[j]))
-		j--;
-	while (i < j)
+	while (i < ac)
 	{
-		if (is_folder(av[i]))
+		tmp = is_folder(av[i]);
+		if (tmp == 0)
 		{
-			ft_swaptab(av + i, av + j);
-			i++;
-			j--;
+			avbis[start] = av[i];
+			start++;
 		}
 		else
-			i++;
+		{
+			if (tmp == 1)
+				avbis[end] = av[i];
+			else
+				avbis[end] = ft_strdup("\0");
+			end--;
+		}
+		i++;
 	}
-	ft_affarg(av, ac);
-	sort_str(av, j - 1);
-	sort_str(av + j - 1, ac - j - 1);
-	ft_putendl("---------");
-	ft_affarg(av, ac);
+	sort_str(avbis, start);
+	sort_str(avbis + start, ac - start);
+	return (avbis);
 }
 
 void			ft_multi_ls(char **av, int ac, t_uint flags)
@@ -168,7 +182,8 @@ int 			main(int ac, char **av)
 		return(ft_ls(ft_strdup("."), flags));
 	if (ac == 1)
 		return(ft_ls(ft_strdup(*av), flags));
-	sort_params(av, ac);
+	av = sort_params(av, ac);
+	ft_affarg(av, ac);
 	ft_multi_ls(av, ac, flags);
 	return (0);
 }

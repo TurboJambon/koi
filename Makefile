@@ -6,16 +6,22 @@
 #    By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/05 14:20:07 by dchirol           #+#    #+#              #
-#    Updated: 2017/05/12 17:04:10 by dchirol          ###   ########.fr        #
+#    Updated: 2017/05/13 17:14:42 by dchirol          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+DEBUG=true
 
 NAME = ft_ls
 
 SRC = src/ft_ls.c
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -I includes
+ifeq ($(DEBUG), true)
+	CFLAGS = -I includes -g
+else
+	CFLAGS = -Wall -Wextra -Werror -I includes
+endif
 OBJ = $(SRC:.c=.o)
 
 all : $(NAME)
