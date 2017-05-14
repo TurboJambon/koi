@@ -6,7 +6,7 @@
 #    By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/05 14:20:07 by dchirol           #+#    #+#              #
-#    Updated: 2017/05/13 19:02:25 by dchirol          ###   ########.fr        #
+#    Updated: 2017/05/14 16:32:36 by dchirol          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ DEBUG=true
 
 NAME = ft_ls
 
-SRC = src/ft_ls.c src/main.c 
+SRC = src/ft_ls.c src/main.c src/utilities.c
 
 CC = gcc
 ifeq ($(DEBUG), true)

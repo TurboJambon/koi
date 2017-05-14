@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/13 19:05:34 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/14 17:49:06 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "libft.h"
 
+# include <stdio.h>
 # include <dirent.h>
 # include <sys/stat.h>
 # include <pwd.h>
@@ -77,6 +78,12 @@ struct s_my_stats
 	char				*uid;
 };
 
-int				ft_ls(char *file, t_uint flags);
+int				ft_ls(char *file, t_uint flags, int ac);
+void			ft_affarg(char **av, int ac);
+void			ft_swaptab(char **s1, char **s2);
+int				is_folder(char *name);
+int				ft_dirlen(DIR *dir, int a, char *file);
+char			**sort_params(char **av, int ac, t_uint flags);
+void			sort_str(char **av, int size);
 
 #endif
