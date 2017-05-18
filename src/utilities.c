@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:37:16 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/14 17:28:51 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/18 16:41:23 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ void			ft_affarg(char **av, int ac)
 	}
 }
 
-void			ft_swaptab(char **s1, char **s2)
+void			ft_swaptab(t_my_stats *s1, t_my_stats *s2)
 {
-	char *tmp;
+	t_my_stats tmp;
 
 	tmp = *s1;
 	*s1 = *s2;

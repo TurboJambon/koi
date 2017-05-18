@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/14 17:49:06 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/18 17:32:24 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,32 +58,41 @@
 
 # define LS_NAME		dirent->d_name
 # define LS_TYPE		dirent->d_type
-# define LS_MODE		stat->mode
-# define LS_NLINK		stat->nlink
-# define LS_UNAME		stat->uname
-# define LS_GRNAME		stat->grname
-# define LS_SIZE		stat->size
+# define LS_MODE		stat.st_mode
+# define LS_NLINK		stat.st_nlink
+# define LS_UID			stat.st_uid
+# define LS_GID			stat.st_gid
+# define LS_SIZE		stat.st_size
+# define LS_MTIME		stat.st_mtime
+# define LS_ATIME		stat.st_atime
+# define LS_BLOCKS		stat.st_blocks
 
-typedef struct s_stats	t_my_stats;
-typedef struct stat		t_stat;
-typedef struct dirent	t_dirent;
-typedef unsigned int	t_uint;
+typedef struct s_my_stats	t_my_stats;
+typedef struct stat			t_stat;
+typedef struct dirent		t_dirent;
+typedef unsigned int		t_uint;
 
 struct s_my_stats
 {
-	t_stat				*stat;
+	t_stat				stat;
 	t_dirent			*dirent;
+	char				*name;
 	char				*path;
 	char				*gid;
 	char				*uid;
 };
 
-int				ft_ls(char *file, t_uint flags, int ac);
+int				ft_ls_folder(char **av, t_uint flags, int ac);
+int				ft_ls_file(char **av, t_uint flags, int ac);
 void			ft_affarg(char **av, int ac);
-void			ft_swaptab(char **s1, char **s2);
+void			ft_swaptab(t_my_stats *s1, t_my_stats *s2);
 int				is_folder(char *name);
 int				ft_dirlen(DIR *dir, int a, char *file);
-char			**sort_params(char **av, int ac, t_uint flags);
-void			sort_str(char **av, int size);
-
+void			sort_params(char **av, int ac, t_uint flags);
+void			sort_str(t_my_stats *stats, int size);
+void			sort_str_t(t_my_stats *stats, int size);
+void			sort_str_r(t_my_stats *stats, int size);
+void			sort_str_rt(t_my_stats *stats, int size);
+void			sort_str_ru(t_my_stats *stats, int size);
+void			sort_str_u(t_my_stats *stats, int size);
 #endif

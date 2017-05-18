@@ -6,75 +6,13 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/14 17:28:48 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/18 16:34:28 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void			sort_str_t(char **av, int size)
-{	
-	int 		flag;
-	int 		i;
-	t_stat 		stats1;
-	t_stat 		stats2;
-
-	flag = 1;
-	while (flag)
-	{
-		i = 0;
-		flag = 0;
-		while (i < size - 1)
-		{
-			lstat(av[i], &stats1);
-			lstat(av[i + 1], &stats2);
-			if (stats1.st_mtime < stats2.st_mtime)
-			{
-				ft_swaptab(av + i, av + i + 1);
-				flag = 1;
-			}
-			i++;
-		}
-	}
-}
-
-void			sort_str_r(char **av, int size)
-{	
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (i < (size - 1) / 2)
-	{
-		ft_swaptab(av + i, av + size - 1 - i);
-		i++;
-	}
-}
-
-void			sort_str(char **av, int size)
-{
-	int flag;
-	int i;
-
-	flag = 1;
-	while (flag)
-	{
-		i = 0;
-		flag = 0;
-		while (i < size - 1)
-		{
-			if (ft_strcmp(av[i], av[i + 1]) > 0)
-			{
-				ft_swaptab(av + i, av + i + 1);
-				flag = 1;
-			}
-			i++;
-		}
-	}
-}
-
-char			**sort_params(char **av, int ac, t_uint flags)
+void			sort_params(char **av, int ac, t_uint flags)
 {
 	int		i;
 	int		start;
@@ -83,7 +21,7 @@ char			**sort_params(char **av, int ac, t_uint flags)
 	int		tmp;
 
 	if (!(avbis = (char **)malloc(sizeof(*avbis) * (ac + 1))))
-		return (NULL);
+		return ;
 	start = 0;
 	end = ac;
 	i = 0;
@@ -107,43 +45,11 @@ char			**sort_params(char **av, int ac, t_uint flags)
 		i++;
 	}
 	avbis[start] = NULL;
-	
-	if (!OPTU)
-	{
-		sort_str(avbis, start);
-		sort_str(avbis + start + 1, ac - start);
-	}
-	if (OPTT)
-	{
-		sort_str_t(avbis, start);
-		sort_str_t(avbis + start + 1, ac - start);
-	}
-	if (OPTR)
-	{
-		sort_str_r(avbis, start);
-		sort_str_r(avbis + start + 1, ac - start);
-	}
-	return (avbis);
-}
 
-void			ft_multi_ls(char **av, int ac, t_uint flags)
-{
-	int i;
-
-	i = 0;
-	while (av[i])
-	{
-		if (av[i][0])
-			ft_ls_file(av[i], flags, ac);
-		i++;
-	}
-	i++;
-	while (i < ac)
-	{
-		if (av[i][0])
-			ft_ls(av[i], flags, ac);
-		i++;
-	}
+	ft_ls_folder(avbis + start + 1, flags, ac - start);
+	ft_ls_file(avbis, flags, start);
+	//sort_str(avbis, start);
+	//sort_str(avbis + start + 1, ac - start);
 }
 
 void			fill_tab(t_uint **tab)
@@ -181,6 +87,23 @@ void		 	get_flags(char *av, t_uint *flags)
 	}
 }
 
+char			**put_dot()
+{
+	char **point;
+
+	point = (char**)malloc(sizeof(char*) * 1);
+	point[0] = ft_strdup(".");
+	return(point);
+}
+
+int				check_folder(char *name, t_uint flags)
+{
+	if (is_folder(name))
+		return (ft_ls_folder(&name, flags, 1));
+	return (ft_ls_file(&name, flags, 1));
+
+}
+
 int 			main(int ac, char **av)
 {
 	t_uint	flags;
@@ -188,7 +111,7 @@ int 			main(int ac, char **av)
 
 	flags = 0;
 	if (ac < 2)
-		return (ft_ls(ft_strdup("."), flags, ac));
+		return (ft_ls_folder(av, flags, ac));
 	i = 1;
 	while (i < ac && av[i][0] == '-' && av[i][1] != '\0')
 	{
@@ -198,11 +121,9 @@ int 			main(int ac, char **av)
 	av += i;
 	ac -= i;
 	if (ac == 0)
-		return(ft_ls(ft_strdup("."), flags, ac));
+		return(ft_ls_folder(put_dot(), flags, 1));
 	if (ac == 1)
-		return(ft_ls(ft_strdup(*av), flags, ac));
-	av = sort_params(av, ac, flags);
-	//ft_affarg(av, ac + 1);
-	ft_multi_ls(av, ac + 1, flags);
+		return(check_folder(ft_strdup(*av), flags));
+	sort_params(av, ac, flags);
 	return (0);
 }
