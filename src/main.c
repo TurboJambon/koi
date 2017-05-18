@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/18 16:34:28 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/18 20:04:48 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void			sort_params(char **av, int ac, t_uint flags)
 	}
 	avbis[start] = NULL;
 
-	ft_ls_folder(avbis + start + 1, flags, ac - start);
 	ft_ls_file(avbis, flags, start);
+	ft_ls_folder(avbis + start + 1, flags, ac - start);
 	//sort_str(avbis, start);
 	//sort_str(avbis + start + 1, ac - start);
 }

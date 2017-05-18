@@ -6,7 +6,7 @@
 #    By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/05 14:20:07 by dchirol           #+#    #+#              #
-#    Updated: 2017/05/18 15:33:21 by dchirol          ###   ########.fr        #
+#    Updated: 2017/05/18 19:37:21 by dchirol          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ DEBUG=true
 
 NAME = ft_ls
 
-SRC = src/ft_ls.c src/main.c src/utilities.c src/sorting.c
+SRC = src/ft_ls.c src/main.c src/utilities.c src/sorting.c src/sorting_folder.c
 
 CC = gcc
 ifeq ($(DEBUG), true)

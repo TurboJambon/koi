@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/18 18:39:48 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/18 20:44:01 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,28 @@ void			printacl(char *file)
 	}
 }
 
-void			printtype(int type)
+char	*ft_strjoin_ls(char *s1, char *s2)
 {
-	static char			vtype[13] = "?fc-d-b---l-s";
+	char	*ret;
+	int		size1;
+	int		size2;
 
-	ft_putchar(vtype[type]);
+	size1 = ft_strlen(s1);
+	size2 = ft_strlen(s2);
+	if (!(ret = (char *)malloc(sizeof(*ret) * (size1 + size2 + 2))))
+		ft_putstr("error malloc in ft_strjoin_ls");
+	ft_memcpy(ret, s1, size1);
+	ret[size1] = '/';
+	ft_memcpy(ret + size1 + 1, s2, size2);
+	ret[size1 + size2 + 1] = '\0';
+	return (ret);
+}
+
+void			printtype(mode_t mode)
+{
+	static char			vtype[18] = "??c?d?b?-?l??????";
+
+	ft_putchar(vtype[mode]);
 }
 
 void			put_mystats(t_my_stats *stats, int ac)
@@ -161,7 +178,7 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 	{
 		if (OPTL)
 		{
-			printtype(typestat(stats[i].stat));
+			printtype((stats[i].LS_MODE >> 12));
 			ft_mode(stats[i].LS_MODE);
 			printacl(stats[i].name);
 			ft_putchar('\t');
@@ -189,8 +206,83 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 	}
 }
 
+t_stat	*fill_folder_infos(char **av, int ac)
+{
+	int 			i;
+	t_stat 	*infos;
+
+	if (!(infos = (t_stat*)malloc(sizeof(t_stat) * ac)))
+		return (NULL);
+	i = 0;
+	while (i < ac)
+	{
+		lstat(av[i], &infos[i]);
+		i++;
+	}
+	return (infos);
+}
+
+void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
+{
+	if (OPTT && OPTR)
+		sort_folder_rt(av, infos, ac);
+	else if (OPTU && OPTR)
+		sort_folder_ru(av, infos, ac);
+	else if (OPTT)
+		sort_folder_t(av, infos, ac);
+	else if (OPTU)
+		sort_folder_u(av, infos, ac);
+	else if (OPTR)
+		sort_folder_r(av, ac);
+	else if (OPTF)
+		;
+	else
+		sort_folder(av, ac);
+	ft_affarg(av, ac);
+}
+
+void			ft_opendir(char **av, int ac, t_uint flags)
+{
+	DIR 		*dir;
+	t_dirent	*dirent;
+	char 		**spoups;
+	char		**coucouille;
+	int 		i;
+	int			p;
+	int			w;
+
+	i = 0;
+	p = 0;
+	while (i < ac)
+	{
+		if (!(spoups = (char **)malloc(sizeof(char*) * 1000)))
+			return ;
+		if (!(coucouille = (char **)malloc(sizeof(char*) * 1000)))
+			return ;
+		dir = opendir(av[i]);
+		w = 0;
+		while ((dirent = readdir(dir)))
+		{
+			spoups[w] = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
+			if (LS_TYPE == DT_DIR)
+			{
+				coucouille[p] = spoups[w];
+				p++;
+			}
+			w++;
+		}
+		ft_ls_file(spoups, flags, w);
+		i++;
+	}
+}
+
 int				ft_ls_folder(char **av, t_uint flags, int ac)
 {
+	t_stat 	*infos;
+
+	infos = fill_folder_infos(av, ac);
+	ft_sorts_folder(av, infos, ac, flags);
+	ft_opendir(av, ac, flags);
 	return (1);
 }
 

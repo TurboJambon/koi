@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/18 17:32:24 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/18 20:44:01 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,11 @@
 # define LS_ATIME		stat.st_atime
 # define LS_BLOCKS		stat.st_blocks
 
-typedef struct s_my_stats	t_my_stats;
-typedef struct stat			t_stat;
-typedef struct dirent		t_dirent;
-typedef unsigned int		t_uint;
+typedef struct s_my_stats		t_my_stats;
+typedef struct s_folder_infos	t_folder_infos;
+typedef struct stat				t_stat;
+typedef struct dirent			t_dirent;
+typedef unsigned int			t_uint;
 
 struct s_my_stats
 {
@@ -85,7 +86,9 @@ struct s_my_stats
 int				ft_ls_folder(char **av, t_uint flags, int ac);
 int				ft_ls_file(char **av, t_uint flags, int ac);
 void			ft_affarg(char **av, int ac);
-void			ft_swaptab(t_my_stats *s1, t_my_stats *s2);
+void			ft_swaptab(char **s1, char **s2);
+void			ft_swapstat(t_stat *s1, t_stat *s2);
+void			ft_swapmystats(t_my_stats *s1, t_my_stats *s2);
 int				is_folder(char *name);
 int				ft_dirlen(DIR *dir, int a, char *file);
 void			sort_params(char **av, int ac, t_uint flags);
@@ -95,4 +98,11 @@ void			sort_str_r(t_my_stats *stats, int size);
 void			sort_str_rt(t_my_stats *stats, int size);
 void			sort_str_ru(t_my_stats *stats, int size);
 void			sort_str_u(t_my_stats *stats, int size);
+void			sort_folder_u(char **av, t_stat *infos, int size);
+void			sort_folder_t(char **av, t_stat *infos, int size);
+void			sort_folder_ru(char **av, t_stat *infos, int size);
+void			sort_folder_rt(char **av, t_stat *infos, int size);
+void			sort_folder(char **av, int size);
+void			sort_folder_r(char **av, int size);
+
 #endif
