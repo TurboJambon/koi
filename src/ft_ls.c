@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/18 20:44:01 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/19 18:27:07 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,21 +78,24 @@ void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac)
 	while (i < tmp)
 	{
 		if (av[i])
+		{
 			my_stats[i].name = av[i];
+			my_stats[i].path = av[i];
+		}
 		else
 			(*ac)--;
 		i++;		
 	}
 }
 
-void			ft_stat(t_my_stats *my_stats, char **av, t_uint flags, int ac)
+void			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
 {
 	int 	i;
 
 	i = 0;
 	while (i < ac)
 	{
-		lstat(av[i], &(my_stats[i].stat));
+		lstat(my_stats[i].path, &(my_stats[i].stat));
 		i++;
 	}
 	if (OPTL)
@@ -147,27 +150,35 @@ void	ft_mode(mode_t n)
 	write(1, mode, 9);
 }
 
-int			typestat(struct stat stats)
+void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
 {
-	int	type;
-
-	type = 0;
-	if ((stats.st_mode & S_IFDIR) > 0)
-		type = 4;
-	else if ((stats.st_mode & S_IFREG) > 0)
-		type = 3;
-	else if ((stats.st_mode & S_IFCHR) > 0)
-		type = 2;
-	else if ((stats.st_mode & S_IFBLK) > 0)
-		type = 6;
-	else if ((stats.st_mode & S_IFIFO) > 0)
-		type = 1;
-	else if ((stats.st_mode & S_IFLNK) > 0)
-		type = 10;
-	else if ((stats.st_mode & S_IFSOCK) > 0)
-		type = 12;
-	return (type);
+	static char			*vtype[18] = {"", "", BLUY, "", CYN, "", 
+									BLUB, "", "", "",
+									MAG, "", "", "", "", "", ""};
+	
+	if (OPTGM)
+	{
+		ft_putstr(vtype[mode >> 12]);
+		if ((mode & S_IFREG) && (mode & 0111))
+			ft_putstr(RED);
+	}
+	ft_putstr(stat.name);
+	ft_putstr(RESET);
 }
+
+void			ft_put_link(t_my_stats stats, t_uint flags)
+{
+	int		ret;
+	char	buf[256];
+
+	ft_put_name(stats, stats.LS_MODE, flags);
+	ft_putstr(" -> ");
+	ret = readlink(stats.path, buf, 256);
+	buf[ret] = '\0';
+	ft_putendl(buf);
+}
+
+
 
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 {
@@ -195,11 +206,17 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 			else
 				write(1, ctime(&stats[i].LS_MTIME) + 4, 12);
 			write(1, "\t", 1);
-			ft_putendl(stats[i].name);
+			if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
+				ft_put_link(stats[i], flags);
+			else
+			{
+				ft_put_name(stats[i], stats[i].LS_MODE, flags);
+				ft_putchar('\n');
+			}
 		}
 		else
 		{
-			ft_putstr(stats[i].name);
+			ft_put_name(stats[i], stats[i].LS_MODE, flags);
 			ft_putchar('\t');
 		}
 		i++;
@@ -245,33 +262,42 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 {
 	DIR 		*dir;
 	t_dirent	*dirent;
-	char 		**spoups;
-	char		**coucouille;
+	t_my_stats 	*spoups;
+	char 		**coucouille;
 	int 		i;
 	int			p;
 	int			w;
 
 	i = 0;
-	p = 0;
 	while (i < ac)
 	{
-		if (!(spoups = (char **)malloc(sizeof(char*) * 1000)))
+		if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 1000)))
 			return ;
-		if (!(coucouille = (char **)malloc(sizeof(char*) * 1000)))
-			return ;
+		if (OPTRM)
+			if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 1000)))
+				return ;
 		dir = opendir(av[i]);
 		w = 0;
+		p = 0;
 		while ((dirent = readdir(dir)))
 		{
-			spoups[w] = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
-			if (LS_TYPE == DT_DIR)
+			spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
+			spoups[w].name = ft_strdup(LS_NAME);
+			if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
 			{
-				coucouille[p] = spoups[w];
+				coucouille[p] = spoups[w].path;
 				p++;
 			}
 			w++;
 		}
 		ft_ls_file(spoups, flags, w);
+		free(spoups);
+		if (OPTRM)
+		{
+			ft_opendir(coucouille, p, flags);
+			free(coucouille);
+		}
+		ft_putchar('\n');
 		i++;
 	}
 }
@@ -286,14 +312,10 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 	return (1);
 }
 
-int				ft_ls_file(char **av, t_uint flags, int ac)
+int				ft_ls_file(t_my_stats *my_stats, t_uint flags, int ac)
 {
-	t_my_stats 	*my_stats;
-
-	my_stats = malloc(sizeof(*my_stats) * ac);
-	ft_fill_name(av, my_stats, &ac);
 	if (OPTL || OPTT || OPTU)
-		ft_stat(my_stats, av, flags, ac);
+		ft_stat(my_stats, flags, ac);
 	ft_sorts(my_stats, ac, flags);
 	ft_put_ls_files(my_stats, ac, flags);
 	//put_mystats(my_stats, ac);
