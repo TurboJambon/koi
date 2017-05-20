@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 15:34:18 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 17:56:04 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ void			printacl(char *file)
 
 	aclvalue = listxattr(file, NULL, 1, XATTR_NOFOLLOW);
 	if (aclvalue > 0)
-		ft_putchar('@');
+		ft_putchar_buf('@');
 	else
 	{
 		acl = acl_get_file(file, ACL_TYPE_EXTENDED);
 		if (acl != NULL)
-			ft_putchar('+');
+			ft_putchar_buf('+');
 		else
-			ft_putchar(' ');
+			ft_putchar_buf(' ');
 		acl_free((void*)acl);
 	}
 }
@@ -40,7 +40,7 @@ char	*ft_strjoin_ls(char *s1, char *s2)
 	size1 = ft_strlen(s1);
 	size2 = ft_strlen(s2);
 	if (!(ret = (char *)malloc(sizeof(*ret) * (size1 + size2 + 2))))
-		ft_putstr("error malloc in ft_strjoin_ls");
+		ft_putstr_buf("error malloc in ft_strjoin_ls");
 	ft_memcpy(ret, s1, size1);
 	ret[size1] = '/';
 	ft_memcpy(ret + size1 + 1, s2, size2);
@@ -50,9 +50,9 @@ char	*ft_strjoin_ls(char *s1, char *s2)
 
 void			printtype(mode_t mode)
 {
-	static char			vtype[18] = "??c?d?b?-?l??????";
+	static char			vtype[18] = "?pc?d?b?-?l??????";
 
-	ft_putchar(vtype[mode]);
+	ft_putchar_buf(vtype[mode]);
 }
 
 void			put_mystats(t_my_stats *stats, int ac)
@@ -62,7 +62,7 @@ void			put_mystats(t_my_stats *stats, int ac)
 	i = 0;
 	while (i < ac)
 	{
-		ft_putendl(stats[i].name);
+		ft_putendl_buf(stats[i].name);
 		i++;
 	}
 
@@ -105,6 +105,8 @@ void			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
 		{
 			my_stats[i].uid = ft_strdup(getpwuid(my_stats[i].LS_UID)->pw_name);
 			my_stats[i].gid = ft_strdup(getgrgid(my_stats[i].LS_GID)->gr_name);
+			my_stats[i].rdev = my_stats[i].stat.st_rdev;
+			my_stats[i].dev = my_stats[i].stat.st_dev;
 			i++;
 		}
 	}
@@ -147,23 +149,23 @@ void	ft_mode(mode_t n)
 		mode[5] = 'S' * (mode[5] == '-') + 's' * (mode[5] == 'x');
 	if (n & 01000)
 		mode[8] = 'T' * (mode[8] == '-') + 't' * (mode[8] == 'x');
-	write(1, mode, 9);
+	ft_buf(1, mode, 9);
 }
 
 void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
 {
-	static char			*vtype[18] = {"", "", BLUY, "", CYN, "", 
+	static char			*vtype[18] = {"", YEL, BLUY, "", CYN, "", 
 									BLUB, "", "", "",
 									MAG, "", "", "", "", "", ""};
 	
 	if (OPTGM)
 	{
-		ft_putstr(vtype[mode >> 12]);
-		if ((mode & S_IFREG) && (mode & 0111))
-			ft_putstr(RED);
+		ft_putstr_buf(vtype[mode >> 12]);
+		if (mode & S_IFREG && !(mode >> 12 == 10) && (mode & 0111))
+				ft_putstr_buf(RED);
 	}
-	ft_putstr(stat.name);
-	ft_putstr(RESET);
+	ft_putstr_buf(stat.name);
+	ft_putstr_buf(RESET);
 }
 
 void			ft_put_link(t_my_stats stats, t_uint flags)
@@ -172,10 +174,10 @@ void			ft_put_link(t_my_stats stats, t_uint flags)
 	char	buf[256];
 
 	ft_put_name(stats, stats.LS_MODE, flags);
-	ft_putstr(" -> ");
+	ft_putstr_buf(" -> ");
 	ret = readlink(stats.path, buf, 256);
 	buf[ret] = '\0';
-	ft_putendl(buf);
+	ft_putendl_buf(buf);
 }
 
 
@@ -185,6 +187,8 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 	int i;
 
 	i = 0;
+	ft_buf(0, NULL, -1);
+	ft_putendl_buf(stats[i].path);
 	while (i < ac)
 	{
 		if (OPTL)
@@ -192,32 +196,32 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 			printtype((stats[i].LS_MODE >> 12));
 			ft_mode(stats[i].LS_MODE);
 			printacl(stats[i].name);
-			ft_putchar('\t');
-			ft_putnbr(stats[i].LS_NLINK);
-			ft_putchar('\t');
-			ft_putstr(stats[i].uid);
-			ft_putchar('\t');
-			ft_putstr(stats[i].gid);
-			ft_putchar('\t');
-			ft_putnbr(stats[i].LS_SIZE);
-			ft_putchar('\t');
+			ft_putchar_buf('\t');
+			ft_putnbr_buf(stats[i].LS_NLINK);
+			ft_putchar_buf('\t');
+			ft_putstr_buf(stats[i].uid);
+			ft_putchar_buf('\t');
+			ft_putstr_buf(stats[i].gid);
+			ft_putchar_buf('\t');
+			ft_putnbr_buf(stats[i].LS_SIZE);
+			ft_putchar_buf('\t');
 			if (OPTU)
-				write(1, ctime(&stats[i].LS_ATIME) + 4, 12);
+				ft_buf(1, ctime(&stats[i].LS_ATIME) + 4, 12);
 			else
-				write(1, ctime(&stats[i].LS_MTIME) + 4, 12);
-			write(1, "\t", 1);
+				ft_buf(1, ctime(&stats[i].LS_MTIME) + 4, 12);
+			ft_putchar_buf('\t');
 			if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
 				ft_put_link(stats[i], flags);
 			else
 			{
 				ft_put_name(stats[i], stats[i].LS_MODE, flags);
-				ft_putchar('\n');
+				ft_putchar_buf('\n');
 			}
 		}
 		else
 		{
 			ft_put_name(stats[i], stats[i].LS_MODE, flags);
-			ft_putchar('\t');
+			ft_putchar_buf('\t');
 		}
 		i++;
 	}
@@ -270,12 +274,13 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 	i = 0;
 	while (i < ac)
 	{
-		if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 1000)))
+		if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 10000)))
 			return ;
 		if (OPTRM)
-			if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 1000)))
+			if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 10000)))
 				return ;
-		dir = opendir(av[i]);
+		while (!(dir = opendir(av[i])))
+				return ;
 		w = 0;
 		p = 0;
 		while ((dirent = readdir(dir)))
@@ -294,15 +299,17 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 				w++;
 			}
 		}
+		closedir(dir);
 		ft_ls_file(spoups, flags, w);
-		free(spoups);
+		ft_putstr_buf("\n");
+		
 		if (OPTRM)
 		{
 			ft_opendir(coucouille, p, flags);
 			free(coucouille);
 		}
-		ft_putchar('\n');
 		i++;
+		free(spoups);
 	}
 }
 
@@ -313,6 +320,7 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 	infos = fill_folder_infos(av, ac);
 	ft_sorts_folder(av, infos, ac, flags);
 	ft_opendir(av, ac, flags);
+	ft_buf(0, NULL, -1);
 	return (1);
 }
 
@@ -322,7 +330,6 @@ int				ft_ls_file(t_my_stats *my_stats, t_uint flags, int ac)
 		ft_stat(my_stats, flags, ac);
 	ft_sorts(my_stats, ac, flags);
 	ft_put_ls_files(my_stats, ac, flags);
-	//put_mystats(my_stats, ac);
 	return (0);
 }
 

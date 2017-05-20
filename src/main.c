@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 15:19:37 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 17:55:50 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,6 @@ void			sort_params(char **av, int ac, t_uint flags)
 
 	ft_av_to_stats(avbis, flags, start);
 	ft_ls_folder(avbis + start + 1, flags, ac - start);
-	//sort_str(avbis, start);
-	//sort_str(avbis + start + 1, ac - start);
 }
 
 void			fill_tab(t_uint **tab)
@@ -91,7 +89,7 @@ void		 	get_flags(char *av, t_uint *flags)
 			*flags |= tab[(int)*av];
 		else
 		{
-			ft_putstr("illegal options"); //A RAJOUTER DANS LIBFT
+			ft_putstr_buf("illegal options"); //A RAJOUTER DANS LIBFT
 			exit(0);
 		}
 		av++;
@@ -110,8 +108,14 @@ char			**put_dot()
 int				check_folder(char *name, t_uint flags)
 {
 	if (is_folder(name))
-		return (ft_ls_folder(&name, flags, 1));
-	return (ft_av_to_stats(&name, flags, 1));
+		{
+			ft_ls_folder(&name, flags, 1);
+			ft_buf(0, NULL, -1);
+			return (0);
+		}
+	ft_av_to_stats(&name, flags, 1);
+	ft_buf(0, NULL, -1);
+	return (0);
 
 }
 
@@ -122,7 +126,11 @@ int 			main(int ac, char **av)
 
 	flags = 0;
 	if (ac < 2)
-		return (ft_ls_folder(av, flags, ac));
+	{
+		return(ft_ls_folder(av, flags, ac));
+		ft_buf(0, NULL, -1);
+		return (0);
+	}
 	i = 1;
 	while (i < ac && av[i][0] == '-' && av[i][1] != '\0')
 	{
@@ -132,9 +140,18 @@ int 			main(int ac, char **av)
 	av += i;
 	ac -= i;
 	if (ac == 0)
+	{
 		return(ft_ls_folder(put_dot(), flags, 1));
+		ft_buf(0, NULL, -1);
+		return(0);
+	}
 	if (ac == 1)
+	{
 		return(check_folder(ft_strdup(*av), flags));
+		ft_buf(0, NULL, -1);
+		return(0);
+	}
 	sort_params(av, ac, flags);
+	ft_buf(0, NULL, -1);
 	return (0);
 }

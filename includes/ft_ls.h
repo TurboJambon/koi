@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 15:19:49 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 17:49:12 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ typedef struct s_folder_infos	t_folder_infos;
 typedef struct stat				t_stat;
 typedef struct dirent			t_dirent;
 typedef unsigned int			t_uint;
+typedef unsigned long int		t_ulint;
 typedef unsigned short int		t_uhint;
+typedef unsigned char			t_uchar;
 
 struct s_my_stats
 {
@@ -85,6 +87,8 @@ struct s_my_stats
 	char				*path;
 	char				*gid;
 	char				*uid;
+	dev_t				rdev;
+ 	dev_t				dev;
 };
 
 int				ft_ls_folder(char **av, t_uint flags, int ac);
@@ -109,5 +113,16 @@ void			sort_folder_rt(char **av, t_stat *infos, int size);
 void			sort_folder(char **av, int size);
 void			sort_folder_r(char **av, int size);
 void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags);
+void			ft_putstr_buf(char *str);
+void			ft_putendl_buf(char *str);
+void			ft_putstr_buf_fd(char *str, int fd);
+void			ft_putchar_buf(char c);
+void			ft_putchar_buf_fd(char c, int fd);
+void			ft_putcharendl_buf_fd(char c, int fd);
+void			ft_putnbr_buf(int n);
+void			ft_putendl_buf_fd(char *str, int fd);
+static int		ft_if(int fd, int size, t_uchar **buf, int *p);
+static void		ft_bufcpy(t_uchar *buf, int *p, void *str, int size);
+int				ft_buf(int fd, void *str, int size);
 
 #endif

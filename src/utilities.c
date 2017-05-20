@@ -6,28 +6,11 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:37:16 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 15:13:21 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 15:49:44 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-int			ft_dirlen(DIR *dir, int a, char *file)
-{
-	struct dirent	*read;
-	int				i;
-
-	i = 0;
-	dir = opendir(file);
-	while ((read = readdir(dir)))
-	{
-		if ((read->d_name[0] == '.' && a == 1)
-			|| a == 1 || (a == 0 && read->d_name[0] != '.'))
-			i++;
-	}
-	closedir(dir);
-	return (i);
-}
 
 void			ft_affarg(char **av, int ac)
 {	
@@ -67,6 +50,7 @@ void			ft_swaptab(char **s1, char **s2)
 	tmp = *s1;
 	*s1 = *s2;
 	*s2 = tmp;
+	free(tmp);
 }
 
 int				is_folder(char *name)
