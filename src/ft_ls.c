@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/19 18:27:07 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 15:34:18 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void			put_mystats(t_my_stats *stats, int ac)
 
 }
 
-void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac)
+void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
 {
 	int i;
 	int tmp;
@@ -255,7 +255,6 @@ void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 		;
 	else
 		sort_folder(av, ac);
-	ft_affarg(av, ac);
 }
 
 void			ft_opendir(char **av, int ac, t_uint flags)
@@ -281,14 +280,19 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		p = 0;
 		while ((dirent = readdir(dir)))
 		{
-			spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
-			spoups[w].name = ft_strdup(LS_NAME);
-			if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
+			if (LS_NAME[0] == '.' && !OPTA)
+				;
+			else
 			{
-				coucouille[p] = spoups[w].path;
-				p++;
+				spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
+				spoups[w].name = ft_strdup(LS_NAME);
+				if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
+				{
+					coucouille[p] = spoups[w].path;
+					p++;
+				}
+				w++;
 			}
-			w++;
 		}
 		ft_ls_file(spoups, flags, w);
 		free(spoups);

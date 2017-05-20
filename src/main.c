@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/19 18:00:46 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 15:19:37 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int				ft_av_to_stats(char **av, t_uint flags, int start)
 	t_my_stats 	*my_stats;
 
 	my_stats = malloc(sizeof(*my_stats) * start);
-	ft_fill_name(av, my_stats, &start);
+	ft_fill_name(av, my_stats, &start, flags);
 	ft_ls_file(my_stats, flags, start);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/19 18:03:18 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/20 15:19:49 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,6 @@ void			sort_folder_ru(char **av, t_stat *infos, int size);
 void			sort_folder_rt(char **av, t_stat *infos, int size);
 void			sort_folder(char **av, int size);
 void			sort_folder_r(char **av, int size);
-void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac);
+void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags);
 
 #endif
