@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 17:55:50 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 13:55:23 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,7 @@ int 			main(int ac, char **av)
 
 	flags = 0;
 	if (ac < 2)
-	{
 		return(ft_ls_folder(av, flags, ac));
-		ft_buf(0, NULL, -1);
-		return (0);
-	}
 	i = 1;
 	while (i < ac && av[i][0] == '-' && av[i][1] != '\0')
 	{
@@ -140,17 +136,9 @@ int 			main(int ac, char **av)
 	av += i;
 	ac -= i;
 	if (ac == 0)
-	{
 		return(ft_ls_folder(put_dot(), flags, 1));
-		ft_buf(0, NULL, -1);
-		return(0);
-	}
 	if (ac == 1)
-	{
 		return(check_folder(ft_strdup(*av), flags));
-		ft_buf(0, NULL, -1);
-		return(0);
-	}
 	sort_params(av, ac, flags);
 	ft_buf(0, NULL, -1);
 	return (0);

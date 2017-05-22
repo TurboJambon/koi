@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 17:49:12 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 14:14:33 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void			ft_swapmystats(t_my_stats *s1, t_my_stats *s2);
 int				is_folder(char *name);
 int				ft_dirlen(DIR *dir, int a, char *file);
 void			sort_params(char **av, int ac, t_uint flags);
+
 void			sort_str(t_my_stats *stats, int size);
 void			sort_str_t(t_my_stats *stats, int size);
 void			sort_str_r(t_my_stats *stats, int size);
@@ -112,6 +113,7 @@ void			sort_folder_ru(char **av, t_stat *infos, int size);
 void			sort_folder_rt(char **av, t_stat *infos, int size);
 void			sort_folder(char **av, int size);
 void			sort_folder_r(char **av, int size);
+
 void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags);
 void			ft_putstr_buf(char *str);
 void			ft_putendl_buf(char *str);

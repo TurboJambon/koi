@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:37:16 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 15:49:44 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 14:03:11 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void			ft_swaptab(char **s1, char **s2)
 	tmp = *s1;
 	*s1 = *s2;
 	*s2 = tmp;
-	free(tmp);
 }
 
 int				is_folder(char *name)

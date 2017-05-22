@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 17:56:04 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 14:10:20 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,13 @@ void			ft_put_link(t_my_stats stats, t_uint flags)
 	ft_putendl_buf(buf);
 }
 
-
+void		ft_putdev(dev_t dev, dev_t rdev)
+{
+	ft_putnbr_buf(dev);
+	ft_putchar_buf('\t');
+	ft_putnbr_buf(rdev);
+	ft_putchar_buf('\t');
+}
 
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 {
@@ -203,7 +209,7 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 			ft_putchar_buf('\t');
 			ft_putstr_buf(stats[i].gid);
 			ft_putchar_buf('\t');
-			ft_putnbr_buf(stats[i].LS_SIZE);
+			((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6) ? ft_putdev(stats[i].dev, stats[i].rdev): ft_putnbr_buf(stats[i].LS_SIZE);
 			ft_putchar_buf('\t');
 			if (OPTU)
 				ft_buf(1, ctime(&stats[i].LS_ATIME) + 4, 12);
@@ -302,11 +308,9 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		closedir(dir);
 		ft_ls_file(spoups, flags, w);
 		ft_putstr_buf("\n");
-		
 		if (OPTRM)
 		{
-			ft_opendir(coucouille, p, flags);
-			free(coucouille);
+			ft_ls_folder(coucouille, flags, p);
 		}
 		i++;
 		free(spoups);
