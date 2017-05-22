@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/12 14:58:24 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/22 14:14:33 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 18:39:21 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define BLU   			"\x1B[34m"
 # define MAG   			"\x1B[35m"
 # define CYN   			"\x1B[1;96m"
-# define BLUB  			"\x1B[34;45m"
+# define BLUB  			"\x1B[34;46m"
 # define BLUY  			"\x1B[34;43m"
 # define RESET 			"\x1B[0m"
 
@@ -56,6 +56,7 @@
 # define OPTF			(flags & LSF)
 # define OPTG			(flags & LSG)
 # define OPTD			(flags & LSD)
+# define OPTP			(flags & LSP)
 # define OPTRM			(flags & LSRM)
 # define OPTGM			(flags & LSGM)
 
@@ -82,7 +83,6 @@ typedef unsigned char			t_uchar;
 struct s_my_stats
 {
 	t_stat				stat;
-	t_dirent			*dirent;
 	char				*name;
 	char				*path;
 	char				*gid;
@@ -126,5 +126,6 @@ void			ft_putendl_buf_fd(char *str, int fd);
 static int		ft_if(int fd, int size, t_uchar **buf, int *p);
 static void		ft_bufcpy(t_uchar *buf, int *p, void *str, int size);
 int				ft_buf(int fd, void *str, int size);
+void			ft_free(t_my_stats *stats, int ac);
 
 #endif

@@ -6,11 +6,26 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/22 13:55:23 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 18:11:08 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+void			ft_free_spe(t_my_stats *stats, int ac)
+{
+	int i;
+
+	i = 0;
+	while (i < ac)
+	{
+		free(stats[i].name);
+		free(stats[i].gid);
+		free(stats[i].uid);
+		i++;
+	}
+	free(stats);
+}
 
 int				ft_av_to_stats(char **av, t_uint flags, int start)
 {
@@ -55,7 +70,6 @@ void			sort_params(char **av, int ac, t_uint flags)
 		i++;
 	}
 	avbis[start] = NULL;
-
 	ft_av_to_stats(avbis, flags, start);
 	ft_ls_folder(avbis + start + 1, flags, ac - start);
 }
@@ -89,7 +103,8 @@ void		 	get_flags(char *av, t_uint *flags)
 			*flags |= tab[(int)*av];
 		else
 		{
-			ft_putstr_buf("illegal options"); //A RAJOUTER DANS LIBFT
+			ft_putstr_buf("illegal options");
+			ft_buf(0, NULL, -1);
 			exit(0);
 		}
 		av++;
@@ -102,7 +117,7 @@ char			**put_dot()
 
 	point = (char**)malloc(sizeof(char*) * 1);
 	point[0] = ft_strdup(".");
-	return(point);
+	return (point);
 }
 
 int				check_folder(char *name, t_uint flags)
@@ -115,6 +130,7 @@ int				check_folder(char *name, t_uint flags)
 		}
 	ft_av_to_stats(&name, flags, 1);
 	ft_buf(0, NULL, -1);
+	free(name);
 	return (0);
 
 }
@@ -123,10 +139,12 @@ int 			main(int ac, char **av)
 {
 	t_uint	flags;
 	int		i;
+	char 	**dot;	
+	char	*str;
 
 	flags = 0;
 	if (ac < 2)
-		return(ft_ls_folder(av, flags, ac));
+		return(ft_ls_folder(put_dot(), flags, ac));
 	i = 1;
 	while (i < ac && av[i][0] == '-' && av[i][1] != '\0')
 	{
@@ -136,10 +154,19 @@ int 			main(int ac, char **av)
 	av += i;
 	ac -= i;
 	if (ac == 0)
-		return(ft_ls_folder(put_dot(), flags, 1));
-	if (ac == 1)
-		return(check_folder(ft_strdup(*av), flags));
-	sort_params(av, ac, flags);
+	{
+		ft_ls_folder((dot = put_dot()), flags, 1);
+		free(dot[0]);
+		free(dot);
+	}
+	else if (ac == 1)
+	{
+		check_folder((str = ft_strdup(*av)), flags);
+		free(str);
+	}
+	else 
+		sort_params(av, ac, flags);
 	ft_buf(0, NULL, -1);
+	while(1);
 	return (0);
 }

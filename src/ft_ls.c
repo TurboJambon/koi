@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/22 14:10:20 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 18:39:20 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void			printacl(char *file)
 	}
 }
 
-char	*ft_strjoin_ls(char *s1, char *s2)
+char			*ft_strjoin_ls(char *s1, char *s2)
 {
 	char	*ret;
 	int		size1;
@@ -88,28 +88,29 @@ void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
 	}
 }
 
-void			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
-{
-	int 	i;
+blkcnt_t			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
+{	
+	int 		i;
+	blkcnt_t 	blocks;
 
 	i = 0;
+	blocks = 0;
 	while (i < ac)
 	{
 		lstat(my_stats[i].path, &(my_stats[i].stat));
 		i++;
 	}
-	if (OPTL)
+	i = 0;
+	while (i < ac)
 	{
-		i = 0;
-		while (i < ac)
-		{
-			my_stats[i].uid = ft_strdup(getpwuid(my_stats[i].LS_UID)->pw_name);
-			my_stats[i].gid = ft_strdup(getgrgid(my_stats[i].LS_GID)->gr_name);
-			my_stats[i].rdev = my_stats[i].stat.st_rdev;
-			my_stats[i].dev = my_stats[i].stat.st_dev;
-			i++;
-		}
+		my_stats[i].uid = ft_strdup(getpwuid(my_stats[i].LS_UID)->pw_name);
+		my_stats[i].gid = ft_strdup(getgrgid(my_stats[i].LS_GID)->gr_name);
+		my_stats[i].rdev = my_stats[i].stat.st_rdev;
+		my_stats[i].dev = my_stats[i].stat.st_dev;
+		blocks += my_stats[i].stat.st_blocks;
+		i++;
 	}
+	return (blocks);
 }
 
 void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)
@@ -165,6 +166,8 @@ void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
 				ft_putstr_buf(RED);
 	}
 	ft_putstr_buf(stat.name);
+	if (OPTL && (mode & S_IFDIR))
+		ft_putstr_buf("/");
 	ft_putstr_buf(RESET);
 }
 
@@ -173,32 +176,34 @@ void			ft_put_link(t_my_stats stats, t_uint flags)
 	int		ret;
 	char	buf[256];
 
-	ft_put_name(stats, stats.LS_MODE, flags);
 	ft_putstr_buf(" -> ");
 	ret = readlink(stats.path, buf, 256);
 	buf[ret] = '\0';
-	ft_putendl_buf(buf);
+	ft_putstr_buf(buf);
 }
 
-void		ft_putdev(dev_t dev, dev_t rdev)
+void		ft_putdev(dev_t rdev)
 {
-	ft_putnbr_buf(dev);
-	ft_putchar_buf('\t');
-	ft_putnbr_buf(rdev);
+	ft_putnbr_buf(rdev >> 24);
+	ft_putstr_buf(", ");
+	ft_putnbr_buf(rdev & 0xfff);
 	ft_putchar_buf('\t');
 }
 
-void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
+void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 {
 	int i;
 
 	i = 0;
 	ft_buf(0, NULL, -1);
-	ft_putendl_buf(stats[i].path);
+	if (stats[i].gid)
+		ft_putstr_buf("total ");
+	ft_putnbr_buf(blocks);
+	ft_putchar_buf('\n');
 	while (i < ac)
 	{
 		if (OPTL)
-		{
+		{			
 			printtype((stats[i].LS_MODE >> 12));
 			ft_mode(stats[i].LS_MODE);
 			printacl(stats[i].name);
@@ -209,31 +214,31 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags)
 			ft_putchar_buf('\t');
 			ft_putstr_buf(stats[i].gid);
 			ft_putchar_buf('\t');
-			((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6) ? ft_putdev(stats[i].dev, stats[i].rdev): ft_putnbr_buf(stats[i].LS_SIZE);
+			if ((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6)
+			 	ft_putdev(stats[i].rdev);
+			else
+				ft_putnbr_buf(stats[i].LS_SIZE);
 			ft_putchar_buf('\t');
 			if (OPTU)
 				ft_buf(1, ctime(&stats[i].LS_ATIME) + 4, 12);
 			else
 				ft_buf(1, ctime(&stats[i].LS_MTIME) + 4, 12);
 			ft_putchar_buf('\t');
+			ft_put_name(stats[i], stats[i].LS_MODE, flags);
 			if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
 				ft_put_link(stats[i], flags);
-			else
-			{
-				ft_put_name(stats[i], stats[i].LS_MODE, flags);
-				ft_putchar_buf('\n');
-			}
+			ft_putchar_buf('\n');
 		}
 		else
 		{
 			ft_put_name(stats[i], stats[i].LS_MODE, flags);
-			ft_putchar_buf('\t');
+			ft_putchar_buf('\n');
 		}
 		i++;
 	}
 }
 
-t_stat	*fill_folder_infos(char **av, int ac)
+t_stat			*fill_folder_infos(char **av, int ac)
 {
 	int 			i;
 	t_stat 	*infos;
@@ -267,6 +272,35 @@ void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 		sort_folder(av, ac);
 }
 
+void	ft_free(t_my_stats *stats, int ac)
+{
+	int i;
+
+	i = 0;
+	while (i < ac)
+	{
+		free(stats[i].name);
+		free(stats[i].path);
+		free(stats[i].gid);
+		free(stats[i].uid);
+		i++;
+	}
+	free(stats);
+}
+
+void	ft_free_stat(char **av, int ac)
+{
+	int i;
+
+	i = 0;
+	while (i < ac)
+	{
+		free(av[i]);
+		i++;
+	}
+	free(av);
+}
+
 void			ft_opendir(char **av, int ac, t_uint flags)
 {
 	DIR 		*dir;
@@ -285,35 +319,38 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		if (OPTRM)
 			if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 10000)))
 				return ;
-		while (!(dir = opendir(av[i])))
-				return ;
-		w = 0;
-		p = 0;
-		while ((dirent = readdir(dir)))
+		ft_putendl_buf(av[i]);
+		if ((dir = opendir(av[i])))
 		{
-			if (LS_NAME[0] == '.' && !OPTA)
-				;
-			else
+			w = 0;
+			p = 0;
+			while ((dirent = readdir(dir)))
 			{
-				spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
-				spoups[w].name = ft_strdup(LS_NAME);
-				if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
+				if (LS_NAME[0] == '.' && !OPTA)
+					;
+				else
 				{
-					coucouille[p] = spoups[w].path;
-					p++;
+					spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
+					spoups[w].name = ft_strdup(LS_NAME);
+					if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
+					{
+						coucouille[p] = ft_strdup(spoups[w].path);
+						p++;
+					}
+					w++;
 				}
-				w++;
 			}
+			closedir(dir);
+			ft_ls_file(spoups, flags, w);
+			ft_free(spoups, w);
 		}
-		closedir(dir);
-		ft_ls_file(spoups, flags, w);
 		ft_putstr_buf("\n");
 		if (OPTRM)
 		{
 			ft_ls_folder(coucouille, flags, p);
+			ft_free_stat(coucouille, p);
 		}
 		i++;
-		free(spoups);
 	}
 }
 
@@ -325,17 +362,17 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 	ft_sorts_folder(av, infos, ac, flags);
 	ft_opendir(av, ac, flags);
 	ft_buf(0, NULL, -1);
+	free(infos);
 	return (1);
 }
 
 int				ft_ls_file(t_my_stats *my_stats, t_uint flags, int ac)
 {
-	if (OPTL || OPTT || OPTU)
-		ft_stat(my_stats, flags, ac);
+	 blkcnt_t blocks;
+
+	if (OPTL || OPTT || OPTU || OPTGM)
+		blocks = ft_stat(my_stats, flags, ac);
 	ft_sorts(my_stats, ac, flags);
-	ft_put_ls_files(my_stats, ac, flags);
+	ft_put_ls_files(my_stats, ac, flags, blocks);
 	return (0);
 }
-
-
-/*FAIR D FRI DAN LE LS*/

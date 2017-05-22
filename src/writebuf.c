@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/20 16:56:55 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/20 17:41:26 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/22 14:49:14 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,27 @@ void	ft_putnbr_buf(int n)
 		{
 			ft_putnbr_buf(n / 10);
 			ft_putnbr_buf(n % 10);
+		}
+		else
+			ft_putchar_buf(n + '0');
+	}
+}
+
+void	ft_putnbr_base_buf(int n, int base)
+{
+	if (n == -2147483648)
+		ft_putstr_buf("-2147483648");
+	else
+	{
+		if (n < 0)
+		{
+			n = -n;
+			ft_putchar_buf('-');
+		}
+		if (n >= base)
+		{
+			ft_putnbr_base_buf(n / base, base);
+			ft_putnbr_base_buf(n % base, base);
 		}
 		else
 			ft_putchar_buf(n + '0');
