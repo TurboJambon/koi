@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/22 18:39:20 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/24 18:01:23 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
 				ft_putstr_buf(RED);
 	}
 	ft_putstr_buf(stat.name);
-	if (OPTL && (mode & S_IFDIR))
+	if (OPTP && (mode & S_IFDIR))
 		ft_putstr_buf("/");
 	ft_putstr_buf(RESET);
 }
@@ -277,6 +277,7 @@ void	ft_free(t_my_stats *stats, int ac)
 	int i;
 
 	i = 0;
+
 	while (i < ac)
 	{
 		free(stats[i].name);
@@ -314,14 +315,15 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 	i = 0;
 	while (i < ac)
 	{
-		if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 10000)))
-			return ;
-		if (OPTRM)
-			if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 10000)))
-				return ;
-		ft_putendl_buf(av[i]);
+		if (av[i][0] != '.' && av[i][0] != '\0')
+			ft_putendl_buf(av[i]);
 		if ((dir = opendir(av[i])))
 		{
+			if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 5000)))
+				return ;
+			if (OPTRM)
+				if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 5000)))
+					return ;
 			w = 0;
 			p = 0;
 			while ((dirent = readdir(dir)))
@@ -343,12 +345,12 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 			closedir(dir);
 			ft_ls_file(spoups, flags, w);
 			ft_free(spoups, w);
-		}
-		ft_putstr_buf("\n");
-		if (OPTRM)
-		{
-			ft_ls_folder(coucouille, flags, p);
-			ft_free_stat(coucouille, p);
+			ft_putstr_buf("\n");
+			if (OPTRM)
+			{
+				ft_ls_folder(coucouille, flags, p);
+				ft_free_stat(coucouille, p);
+			}
 		}
 		i++;
 	}
@@ -363,6 +365,7 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 	ft_opendir(av, ac, flags);
 	ft_buf(0, NULL, -1);
 	free(infos);
+
 	return (1);
 }
 
