@@ -6,24 +6,11 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:18:56 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 21:37:46 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-int				ft_nblen(int nb)
-{
-	int		size;
-
-	size = 1;
-	while (nb >= 10)
-	{
-		size++;
-		nb /= 10;
-	}
-	return (size);
-}
 
 void			ft_blanks(t_my_stats *stats, int ac, int *blanks)
 {
@@ -50,107 +37,6 @@ void			ft_blanks(t_my_stats *stats, int ac, int *blanks)
 	}
 }
 
-void			printacl(char *file)
-{
-	acl_t		acl;
-	ssize_t		aclvalue;
-
-	aclvalue = listxattr(file, NULL, 1, XATTR_NOFOLLOW);
-	if (aclvalue > 0)
-		ft_putchar_buf('@');
-	else
-	{
-		acl = acl_get_file(file, ACL_TYPE_EXTENDED);
-		if (acl != NULL)
-			ft_putchar_buf('+');
-		else
-			ft_putchar_buf(' ');
-		acl_free((void*)acl);
-	}
-
-}
-
-char			*ft_strjoin_ls(char *s1, char *s2)
-{
-	char	*ret;
-	int		size1;
-	int		size2;
-
-	size1 = ft_strlen(s1);
-	size2 = ft_strlen(s2);
-	if (!(ret = (char *)malloc(sizeof(*ret) * (size1 + size2 + 2))))
-		ft_putstr_buf("error malloc in ft_strjoin_ls");
-	ft_memcpy(ret, s1, size1);
-	ret[size1] = '/';
-	ft_memcpy(ret + size1 + 1, s2, size2);
-	ret[size1 + size2 + 1] = '\0';
-	return (ret);
-}
-
-void			printtype(mode_t mode)
-{
-	static char			vtype[18] = "?pc?d?b?-?l??????";
-
-	ft_putchar_buf(vtype[mode]);
-}
-
-void			put_mystats(t_my_stats *stats, int ac)
-{
-	int i;
-
-	i = 0;
-	while (i < ac)
-	{
-		ft_putendl_buf(stats[i].name);
-		i++;
-	}
-
-}
-
-void			ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
-{
-	int i;
-	int tmp;
-
-	tmp = *ac;
-	i = 0;
-	while (i < tmp)
-	{
-		if (av[i])
-		{
-			my_stats[i].name = av[i];
-			my_stats[i].path = av[i];
-		}
-		else
-			(*ac)--;
-		i++;		
-	}
-}
-
-blkcnt_t			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
-{	
-	int 		i;
-	blkcnt_t 	blocks;
-
-	i = 0;
-	blocks = 0;
-	while (i < ac)
-	{
-		lstat(my_stats[i].path, &(my_stats[i].stat));
-		i++;
-	}
-	i = 0;
-	while (i < ac)
-	{
-		my_stats[i].uid = ft_strdup(getpwuid(my_stats[i].LS_UID)->pw_name);
-		my_stats[i].gid = ft_strdup(getgrgid(my_stats[i].LS_GID)->gr_name);
-		my_stats[i].rdev = my_stats[i].stat.st_rdev;
-		my_stats[i].dev = my_stats[i].stat.st_dev;
-		blocks += my_stats[i].stat.st_blocks;
-		i++;
-	}
-	return (blocks);
-}
 
 void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)
 {
@@ -168,105 +54,6 @@ void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)
 		;
 	else
 		sort_str(my_stats, ac);
-}
-
-void	ft_mode(mode_t n)
-{
-	static char		mode[9];
-
-	mode[0] = '-' + ((n & 0400) > 0) * ('r' - '-');
-	mode[1] = '-' + ((n & 0200) > 0) * ('w' - '-');
-	mode[2] = '-' + ((n & 0100) > 0) * ('x' - '-');
-	mode[3] = '-' + ((n & 0040) > 0) * ('r' - '-');
-	mode[4] = '-' + ((n & 0020) > 0) * ('w' - '-');
-	mode[5] = '-' + ((n & 0010) > 0) * ('x' - '-');
-	mode[6] = '-' + ((n & 0004) > 0) * ('r' - '-');
-	mode[7] = '-' + ((n & 0002) > 0) * ('w' - '-');
-	mode[8] = '-' + ((n & 0001) > 0) * ('x' - '-');
-	if (n & 04000)
-		mode[2] = 'S' * (mode[2] == '-') + 's' * (mode[2] == 'x');
-	if (n & 02000)
-		mode[5] = 'S' * (mode[5] == '-') + 's' * (mode[5] == 'x');
-	if (n & 01000)
-		mode[8] = 'T' * (mode[8] == '-') + 't' * (mode[8] == 'x');
-	ft_buf(1, mode, 9);
-}
-
-void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
-{
-	static char			*vtype[18] = {"", YEL, BLUY, "", CYN, "", 
-									BLUB, "", "", "",
-									MAG, "", "", "", "", "", ""};
-	
-	if (OPTGM)
-	{
-		ft_putstr_buf(vtype[mode >> 12]);
-		if (mode & S_IFREG && !(mode >> 12 == 10) && (mode & 0111))
-				ft_putstr_buf(RED);
-	}
-	ft_putstr_buf(stat.name);
-	if (OPTP && (mode & S_IFDIR))
-		ft_putstr_buf("/");
-	ft_putstr_buf(RESET);
-}
-
-void			ft_put_link(t_my_stats stats, t_uint flags)
-{
-	int		ret;
-	char	buf[256];
-
-	ft_putstr_buf(" -> ");
-	ret = readlink(stats.path, buf, 256);
-	buf[ret] = '\0';
-	ft_putstr_buf(buf);
-}
-
-void		ft_putdev(dev_t rdev)
-{
-	ft_putnbr_buf(rdev >> 24);
-	ft_putstr_buf(", ");
-	ft_putnbr_buf(rdev & 0xfff);
-	ft_putchar_buf('\t');
-}
-
-void			ft_putstrblanks_buf(char *str, int blanks)
-{
-	int		size;
-	char	space[blanks];
-
-	size = ft_strlen(str);
-	ft_memset(space, ' ', blanks - size);
-	ft_buf(1, space, blanks - size);
-	ft_buf(1, str, size);
-}
-
-void			ft_putnbrblanks_buf(int nbr, int blanks)
-{
-	int		size;
-	char	space[blanks];
-
-	size = ft_nblen(nbr);
-	ft_memset(space, ' ', blanks - size);
-	ft_buf(1, space, blanks - size);
-	ft_putnbr_buf(nbr);
-}
-
-void			ft_putdate(time_t date)
-{
-	char	*str;
-
-	str = ctime(&date);
-	if (time(NULL) - date > 15768000)
-	{
-		ft_buf(1, str + 4, 6);
-		ft_putchar_buf(' ');
-		ft_buf(1, str + 20, 4);
-		ft_putchar_buf(' ');
-	}
-	else
-	{
-		ft_buf(1, str + 4, 12);
-	}
 }
 
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
@@ -320,22 +107,6 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 	}
 }
 
-t_stat			*fill_folder_infos(char **av, int ac)
-{
-	int 			i;
-	t_stat 	*infos;
-
-	if (!(infos = (t_stat*)malloc(sizeof(t_stat) * ac)))
-		return (NULL);
-	i = 0;
-	while (i < ac)
-	{
-		lstat(av[i], &infos[i]);
-		i++;
-	}
-	return (infos);
-}
-
 void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 {
 	if (OPTF)
@@ -354,52 +125,6 @@ void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 		sort_folder(av, ac);
 }
 
-void	ft_free(t_my_stats *stats, int ac)
-{
-	int i;
-
-	i = 0;
-
-	while (i < ac)
-	{
-		free(stats[i].name);
-		free(stats[i].path);
-		free(stats[i].gid);
-		free(stats[i].uid);
-		i++;
-	}
-	free(stats);
-}
-
-void	ft_free_stat(char **av, int ac)
-{
-	int i;
-
-	i = 0;
-	while (i < ac)
-	{
-		free(av[i]);
-		i++;
-	}
-	free(av);
-}
-
-void			ft_put_error(char *str)
-{
-	if (errno == 2)
-	{
-		ft_putstr_buf("ls: ");
-		ft_putstr_buf(str);
-		ft_putendl_buf(": No such file or directory");
-		ft_putstr_buf("\n");
-	}
-	else if (errno == 13)
-	{
-		ft_putstr_buf("ls: ");
-		ft_putstr_buf(str);
-		ft_putendl_buf(": Permission denied");
-	}
-}
 
 void			ft_opendir(char **av, int ac, t_uint flags)
 {

@@ -6,23 +6,19 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:37:16 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 20:46:09 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 21:23:29 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void			ft_affarg(char **av, int ac)
-{	
-	int i;
+char			**put_dot()
+{
+	char **point;
 
-	i = 0;
-	while (i < ac)
-	{
-		if (av[i])
-			ft_putendl(av[i]);
-		i++;
-	}
+	point = (char**)malloc(sizeof(char*) * 1);
+	point[0] = ft_strdup(".");
+	return (point);
 }
 
 void			ft_swapstat(t_stat *s1, t_stat *s2)
