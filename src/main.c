@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/24 18:50:54 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 17:07:42 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,8 @@ void			sort_params(char **av, int ac, t_uint flags)
 	if (!(avbis = (char **)malloc(sizeof(*avbis) * ac)))
 		return ;
 	start = 0;
-	end = ac;
+	end = ac - 1;
 	i = 0;
-	tmp = -1;
 	while (i < ac)
 	{
 		tmp = is_folder(av[i]);
@@ -70,7 +69,7 @@ void			sort_params(char **av, int ac, t_uint flags)
 		i++;
 	}
 	ft_av_to_stats(avbis, flags, start);
-	ft_ls_folder(avbis + start + 1, flags, ac - start);
+	ft_ls_folder(avbis + start, flags, ac - start);
 	free(avbis);
 }
 
@@ -123,11 +122,11 @@ char			**put_dot()
 int				check_folder(char *name, t_uint flags)
 {
 	if (is_folder(name))
-		{
-			ft_ls_folder(&name, flags, 1);
-			ft_buf(0, NULL, -1);
-			return (0);
-		}
+	{
+		ft_ls_folder(&name, flags, 1);
+		ft_buf(0, NULL, -1);
+		return (0);
+	}
 	ft_av_to_stats(&name, flags, 1);
 	ft_buf(0, NULL, -1);
 	free(name);
