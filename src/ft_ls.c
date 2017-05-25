@@ -6,11 +6,49 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 17:06:46 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 17:54:44 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+int				ft_nblen(int nb)
+{
+	int		size;
+
+	size = 1;
+	while (nb >= 10)
+	{
+		size++;
+		nb /= 10;
+	}
+	return (size);
+}
+
+void			ft_blanks(t_my_stats *stats, int ac, int *blanks)
+{
+	int		i;
+	int		tmp;
+
+	ft_bzero(blanks, 16);
+	i = 0;
+	while (i < ac)
+	{
+		tmp = ft_nblen(stats[i].LS_NLINK);
+		if (tmp > blanks[0])
+			blanks[0] = tmp;
+		tmp = ft_strlen(stats[i].uid);
+		if (tmp > blanks[1])
+			blanks[1] = tmp;
+		tmp = ft_strlen(stats[i].gid);
+		if (tmp > blanks[2])
+			blanks[2] = tmp;
+		tmp = ft_nblen(stats[i].LS_SIZE);
+		if (tmp > blanks[3])
+			blanks[3] = tmp;
+		i++;
+	}
+}
 
 void			printacl(char *file)
 {
@@ -191,17 +229,41 @@ void		ft_putdev(dev_t rdev)
 	ft_putchar_buf('\t');
 }
 
+void			ft_putstrblanks_buf(char *str, int blanks)
+{
+	int		size;
+	char	space[blanks];
+
+	size = ft_strlen(str);
+	ft_memset(space, ' ', blanks - size);
+	ft_buf(1, space, blanks - size);
+	ft_buf(1, str, size);
+}
+
+void			ft_putnbrblanks_buf(int nbr, int blanks)
+{
+	int		size;
+	char	space[blanks];
+
+	size = ft_nblen(nbr);
+	ft_memset(space, ' ', blanks - size);
+	ft_buf(1, space, blanks - size);
+	ft_putnbr_buf(nbr);
+}
+
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 {
-	int i;
+	int		i;
+	int		blanks[4];
 
-	i = 0;
-	if (stats[i].gid)
+	if (OPTL)
 	{
+		ft_blanks(stats, ac, blanks);
 		ft_putstr_buf("total ");
 		ft_putnbr_buf(blocks);
 		ft_putchar_buf('\n');
 	}
+	i = 0;
 	while (i < ac)
 	{
 		if (OPTL)
@@ -209,23 +271,23 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 			printtype((stats[i].LS_MODE >> 12));
 			ft_mode(stats[i].LS_MODE);
 			printacl(stats[i].path);
-			ft_putchar_buf('\t');
-			ft_putnbr_buf(stats[i].LS_NLINK);
-			ft_putchar_buf('\t');
-			ft_putstr_buf(stats[i].uid);
-			ft_putchar_buf('\t');
-			ft_putstr_buf(stats[i].gid);
-			ft_putchar_buf('\t');
+			ft_putchar_buf(' ');
+			ft_putnbrblanks_buf(stats[i].LS_NLINK, blanks[0]);
+			ft_putchar_buf(' ');
+			ft_putstrblanks_buf(stats[i].uid, blanks[1]);
+			ft_putstr_buf("  ");
+			ft_putstrblanks_buf(stats[i].gid, blanks[2]);
+			ft_putstr_buf("  ");
 			if ((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6)
 			 	ft_putdev(stats[i].rdev);
 			else
-				ft_putnbr_buf(stats[i].LS_SIZE);
-			ft_putchar_buf('\t');
+				ft_putnbrblanks_buf(stats[i].LS_SIZE, blanks[3]);
+			ft_putchar_buf(' ');
 			if (OPTU)
 				ft_buf(1, ctime(&stats[i].LS_ATIME) + 4, 12);
 			else
 				ft_buf(1, ctime(&stats[i].LS_MTIME) + 4, 12);
-			ft_putchar_buf('\t');
+			ft_putchar_buf(' ');
 			ft_put_name(stats[i], stats[i].LS_MODE, flags);
 			if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
 				ft_put_link(stats[i], flags);
@@ -383,7 +445,7 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 
 int				ft_ls_file(t_my_stats *my_stats, t_uint flags, int ac)
 {
-	 blkcnt_t blocks;
+	blkcnt_t	blocks;
 
 	if (OPTL || OPTT || OPTU || OPTGM)
 		blocks = ft_stat(my_stats, flags, ac);
