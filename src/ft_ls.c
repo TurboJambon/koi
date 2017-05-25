@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 19:11:24 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 21:18:56 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,33 +253,19 @@ void			ft_putnbrblanks_buf(int nbr, int blanks)
 
 void			ft_putdate(time_t date)
 {
-	int		i;
 	char	*str;
 
+	str = ctime(&date);
 	if (time(NULL) - date > 15768000)
 	{
-		i = 3;
-		str = ctime(&date);
-		while (i <= 9)
-		{
-			ft_putchar_buf(str[i]);
-			i++;
-		}
+		ft_buf(1, str + 4, 6);
 		ft_putchar_buf(' ');
 		ft_buf(1, str + 20, 4);
 		ft_putchar_buf(' ');
 	}
 	else
 	{
-		str = ctime(&date);
-		i = 4;
-		ft_putchar_buf(' ');
-		while (i <= 15)
-		{
-			ft_putchar_buf(str[i]);
-			i++;
-		}
-
+		ft_buf(1, str + 4, 12);
 	}
 }
 
@@ -405,6 +391,7 @@ void			ft_put_error(char *str)
 		ft_putstr_buf("ls: ");
 		ft_putstr_buf(str);
 		ft_putendl_buf(": No such file or directory");
+		ft_putstr_buf("\n");
 	}
 	else if (errno == 13)
 	{
@@ -412,7 +399,6 @@ void			ft_put_error(char *str)
 		ft_putstr_buf(str);
 		ft_putendl_buf(": Permission denied");
 	}
-	ft_putstr_buf("\n");
 }
 
 void			ft_opendir(char **av, int ac, t_uint flags)
@@ -424,10 +410,14 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 	int 		i;
 	int			p;
 	int			w;
+	static int flag = 0;
 
 	i = 0;
 	while (i < ac)
 	{
+		if (flag)
+			ft_putstr_buf("\n");
+		flag = 1;
 		if (av[i][0] != '.' && av[i][0] != '\0')
 		{
 			ft_putstr_buf(av[i]);
@@ -462,7 +452,6 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 			closedir(dir);
 			ft_ls_file(spoups, flags, w);
 			ft_free(spoups, w);
-			ft_putstr_buf("\n");
 			if (OPTRM)
 			{
 				ft_ls_folder(coucouille, flags, p);
