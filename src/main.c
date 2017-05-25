@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/24 17:57:15 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/24 18:50:54 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,11 +157,6 @@ int 			main(int ac, char **av)
 		ft_ls_folder((dot = put_dot()), flags, 1);
 		free(dot[0]);
 		free(dot);
-	}
-	else if (ac == 1)
-	{
-		check_folder((str = ft_strdup(*av)), flags);
-		free(str);
 	}
 	else 
 		sort_params(av, ac, flags);

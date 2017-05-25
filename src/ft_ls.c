@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/24 18:01:23 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/24 19:16:18 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,9 +197,11 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 	i = 0;
 	ft_buf(0, NULL, -1);
 	if (stats[i].gid)
+	{
 		ft_putstr_buf("total ");
-	ft_putnbr_buf(blocks);
-	ft_putchar_buf('\n');
+		ft_putnbr_buf(blocks);
+		ft_putchar_buf('\n');
+	}
 	while (i < ac)
 	{
 		if (OPTL)
@@ -316,7 +318,10 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 	while (i < ac)
 	{
 		if (av[i][0] != '.' && av[i][0] != '\0')
-			ft_putendl_buf(av[i]);
+		{
+			ft_putstr_buf(av[i]);
+			ft_putendl_buf(":");
+		}
 		if ((dir = opendir(av[i])))
 		{
 			if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 5000)))
