@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 17:54:44 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 19:11:24 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,6 +251,38 @@ void			ft_putnbrblanks_buf(int nbr, int blanks)
 	ft_putnbr_buf(nbr);
 }
 
+void			ft_putdate(time_t date)
+{
+	int		i;
+	char	*str;
+
+	if (time(NULL) - date > 15768000)
+	{
+		i = 3;
+		str = ctime(&date);
+		while (i <= 9)
+		{
+			ft_putchar_buf(str[i]);
+			i++;
+		}
+		ft_putchar_buf(' ');
+		ft_buf(1, str + 20, 4);
+		ft_putchar_buf(' ');
+	}
+	else
+	{
+		str = ctime(&date);
+		i = 4;
+		ft_putchar_buf(' ');
+		while (i <= 15)
+		{
+			ft_putchar_buf(str[i]);
+			i++;
+		}
+
+	}
+}
+
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 {
 	int		i;
@@ -284,9 +316,9 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 				ft_putnbrblanks_buf(stats[i].LS_SIZE, blanks[3]);
 			ft_putchar_buf(' ');
 			if (OPTU)
-				ft_buf(1, ctime(&stats[i].LS_ATIME) + 4, 12);
+				ft_putdate(stats[i].LS_ATIME);
 			else
-				ft_buf(1, ctime(&stats[i].LS_MTIME) + 4, 12);
+				ft_putdate(stats[i].LS_MTIME);
 			ft_putchar_buf(' ');
 			ft_put_name(stats[i], stats[i].LS_MODE, flags);
 			if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
@@ -368,7 +400,19 @@ void	ft_free_stat(char **av, int ac)
 
 void			ft_put_error(char *str)
 {
-	ft_putnbr_buf(errno);
+	if (errno == 2)
+	{
+		ft_putstr_buf("ls: ");
+		ft_putstr_buf(str);
+		ft_putendl_buf(": No such file or directory");
+	}
+	else if (errno == 13)
+	{
+		ft_putstr_buf("ls: ");
+		ft_putstr_buf(str);
+		ft_putendl_buf(": Permission denied");
+	}
+	ft_putstr_buf("\n");
 }
 
 void			ft_opendir(char **av, int ac, t_uint flags)
@@ -393,6 +437,7 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		{
 			if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 5000)))
 				return ;
+			coucouille = NULL;
 			if (OPTRM)
 				if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 5000)))
 					return ;

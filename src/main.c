@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 17:10:58 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/25 18:47:12 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,9 @@ void		 	get_flags(char *av, t_uint *flags)
 			*flags |= tab[(int)*av];
 		else
 		{
-			ft_putstr_buf("illegal options");
+			ft_putstr_buf("ls: illegal option -- ");
+			ft_putchar_buf(*av);
+			ft_putendl_buf("\nusage: ls [-GRaflprtu] [file ...]");
 			ft_buf(0, NULL, -1);
 			exit(0);
 		}
