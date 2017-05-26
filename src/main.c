@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
+/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:38:03 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 12:20:44 by David            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,13 @@ int				ft_av_to_stats(char **av, t_uint flags, int start)
 	return (0);
 }
 
-void			sort_params(char **av, int ac, t_uint flags)
+void			param_sorter(char **av, char **avbis, int ac, t_uint flags)		
 {
-	int		i;
-	int		start;
-	int		end;
-	char	**avbis;
-	int		tmp;
+	int tmp;
+	static int i = 0;
+	static int start = 0;
+	static int end = ac - 1;
 
-	if (!(avbis = (char **)malloc(sizeof(*avbis) * ac)))
-		return ;
-	start = 0;
-	end = ac - 1;
-	i = 0;
 	while (i < ac)
 	{
 		tmp = is_folder(av[i]);
@@ -56,46 +50,22 @@ void			sort_params(char **av, int ac, t_uint flags)
 	}
 	ft_av_to_stats(avbis, flags, start);
 	ft_ls_folder(avbis + start, flags, ac - start);
+}
+
+void			sort_params(char **av, int ac, t_uint flags)
+{
+	int		i;
+	int		start;
+	int		end;
+	char	**avbis;
+	int		tmp;
+
+	if (!(avbis = (char **)malloc(sizeof(*avbis) * ac)))
+		return ;
+	start = 0;
+	end = ac - 1;
+	param_sorter(av, avbis, ac, flags);
 	free(avbis);
-}
-
-void			fill_tab(t_uint **tab)
-{
-	*tab = (t_uint*)malloc(sizeof(**tab) * 127);
-	ft_bzero(*tab, 127 * 4);
-	(*tab)['l'] = LSL;
-	(*tab)['a'] = LSA;
-	(*tab)['r'] = LSR;
-	(*tab)['t'] = LST;
-	(*tab)['u'] = LSU;
-	(*tab)['f'] = LSF;
-	(*tab)['d'] = LSD;
-	(*tab)['R'] = LSRM;
-	(*tab)['g'] = LSG;
-	(*tab)['G'] = LSGM;
-	(*tab)['p'] = LSP;
-}
-
-void		 	get_flags(char *av, t_uint *flags)
-{
-	static t_uint 	*tab = NULL;
-
-	if (!tab)
-		fill_tab(&tab);
-	while (*av)
-	{
-		if (tab[(int)*av])
-			*flags |= tab[(int)*av];
-		else
-		{
-			ft_putstr_buf("ls: illegal option -- ");
-			ft_putchar_buf(*av);
-			ft_putendl_buf("\nusage: ls [-GRaflprtu] [file ...]");
-			ft_buf(0, NULL, -1);
-			exit(0);
-		}
-		av++;
-	}
 }
 
 int				check_folder(char *name, t_uint flags)
@@ -103,26 +73,23 @@ int				check_folder(char *name, t_uint flags)
 	if (is_folder(name))
 	{
 		ft_ls_folder(&name, flags, 1);
-		ft_buf(0, NULL, -1);
 		return (0);
 	}
 	ft_av_to_stats(&name, flags, 1);
-	ft_buf(0, NULL, -1);
 	free(name);
 	return (0);
 }
 
 int 			main(int ac, char **av)
 {
-	t_uint	flags;
-	int		i;
-	char 	**dot;	
-	char	*str;
+	t_uint			flags;
+	static int		i = 1;
+	char 			**dot;	
+	char			*str;
 
 	flags = 0;
 	if (ac < 2)
 		return(ft_ls_folder(put_dot(), flags, ac));
-	i = 1;
 	while (i < ac && av[i][0] == '-' && av[i][1] != '\0')
 	{
 		get_flags(av[i] + 1, &flags);
