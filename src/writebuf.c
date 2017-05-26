@@ -3,28 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   writebuf.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/20 16:56:55 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 11:28:54 by David            ###   ########.fr       */
+/*   Updated: 2017/05/26 21:50:45 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-
-void	ft_putendl_buf_fd(char *str, int fd)
+void				ft_putendl_buf_fd(char *str, int fd)
 {
-	size_t len;
+	size_t	len;
 
-if (!str)
+	if (!str)
 		return ;
 	len = ft_strlen(str);
 	ft_buf(fd, str, len);
 	ft_buf(fd, "\n", 1);
 }
 
-static int	ft_if(int fd, int size, t_uchar **buf, int *p)
+static int			ft_if(int fd, int size, t_uchar **buf, int *p)
 {
 	if (!*buf)
 	{
@@ -45,7 +44,7 @@ static int	ft_if(int fd, int size, t_uchar **buf, int *p)
 	return (1);
 }
 
-static void	ft_bufcpy(t_uchar *buf, int *p, void *str, int size)
+static void			ft_bufcpy(t_uchar *buf, int *p, void *str, int size)
 {
 	t_ulint	*tmp1;
 	t_ulint	*tmp2;
@@ -73,7 +72,7 @@ static void	ft_bufcpy(t_uchar *buf, int *p, void *str, int size)
 	}
 }
 
-int			ft_buf(int fd, void *str, int size)
+int					ft_buf(int fd, void *str, int size)
 {
 	static t_uchar	*buf = NULL;
 	static int		p = 0;

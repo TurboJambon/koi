@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flag.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 11:56:36 by David             #+#    #+#             */
-/*   Updated: 2017/05/26 11:57:02 by David            ###   ########.fr       */
+/*   Updated: 2017/05/26 21:39:04 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void			fill_tab(t_uint **tab)
 	(*tab)['p'] = LSP;
 }
 
-void		 	get_flags(char *av, t_uint *flags)
+void			get_flags(char *av, t_uint *flags)
 {
-	static t_uint 	*tab = NULL;
+	static t_uint	*tab = NULL;
 
 	if (!tab)
 		fill_tab(&tab);

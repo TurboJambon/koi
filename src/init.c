@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:31:52 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 11:56:17 by David            ###   ########.fr       */
+/*   Updated: 2017/05/26 21:41:04 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void				put_mystats(t_my_stats *stats, int ac)
+void		put_mystats(t_my_stats *stats, int ac)
 {
 	int i;
 
@@ -22,10 +22,9 @@ void				put_mystats(t_my_stats *stats, int ac)
 		ft_putendl_buf(stats[i].name);
 		i++;
 	}
-
 }
 
-void				ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
+void		ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
 {
 	int i;
 	int tmp;
@@ -41,14 +40,14 @@ void				ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
 		}
 		else
 			(*ac)--;
-		i++;		
+		i++;
 	}
 }
 
-blkcnt_t			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
-{	
-	int 		i;
-	blkcnt_t 	blocks;
+blkcnt_t	ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
+{
+	int			i;
+	blkcnt_t	blocks;
 
 	i = 0;
 	blocks = 0;
@@ -70,10 +69,10 @@ blkcnt_t			ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
 	return (blocks);
 }
 
-t_stat			*fill_folder_infos(char **av, int ac)
+t_stat		*fill_folder_infos(char **av, int ac)
 {
-	int 			i;
-	t_stat 	*infos;
+	int				i;
+	t_stat			*infos;
 
 	if (!(infos = (t_stat*)malloc(sizeof(t_stat) * ac)))
 		return (NULL);

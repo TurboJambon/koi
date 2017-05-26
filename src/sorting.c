@@ -6,16 +6,16 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/18 14:50:05 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:22:12 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 21:46:17 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 void			sort_str_u(t_my_stats *stats, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -35,9 +35,9 @@ void			sort_str_u(t_my_stats *stats, int size)
 }
 
 void			sort_str_t(t_my_stats *stats, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)

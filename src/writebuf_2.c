@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   writebuf_2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 11:22:25 by David             #+#    #+#             */
-/*   Updated: 2017/05/26 11:26:02 by David            ###   ########.fr       */
+/*   Updated: 2017/05/26 21:50:13 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_putstr_buf(char *str)
 {
-	size_t len;
+	size_t	len;
 
 	if (!str)
 		return ;
@@ -24,9 +24,9 @@ void	ft_putstr_buf(char *str)
 
 void	ft_putendl_buf(char *str)
 {
-	size_t len;
+	size_t	len;
 
-if (!str)
+	if (!str)
 		return ;
 	len = ft_strlen(str);
 	ft_buf(1, str, len);
@@ -35,9 +35,9 @@ if (!str)
 
 void	ft_putstr_buf_fd(char *str, int fd)
 {
-	size_t len;
+	size_t	len;
 
-if (!str)
+	if (!str)
 		return ;
 	len = ft_strlen(str);
 	ft_buf(fd, str, len);

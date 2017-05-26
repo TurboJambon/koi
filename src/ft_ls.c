@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 12:21:13 by David            ###   ########.fr       */
+/*   Updated: 2017/05/26 23:29:23 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,33 @@ void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)
 		sort_str(my_stats, ac);
 }
 
-
+void			ft_put_ls_file_l(t_my_stats *stats, int i, t_uint flags, int *blanks)
+{
+	printtype((stats[i].LS_MODE >> 12));
+	ft_mode(stats[i].LS_MODE);
+	printacl(stats[i].path);
+	ft_putchar_buf(' ');
+	ft_putnbrblanks_buf(stats[i].LS_NLINK, blanks[0]);
+	ft_putchar_buf(' ');
+	ft_putstrblanks_buf(stats[i].uid, blanks[1]);
+	ft_putstr_buf("  ");
+	ft_putstrblanks_buf(stats[i].gid, blanks[2]);
+	ft_putstr_buf("  ");
+	if ((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6)
+	 	ft_putdev(stats[i].rdev);
+	else
+		ft_putnbrblanks_buf(stats[i].LS_SIZE, blanks[3]);
+	ft_putchar_buf(' ');
+	if (OPTU)
+		ft_putdate(stats[i].LS_ATIME);
+	else
+	ft_putdate(stats[i].LS_MTIME);
+	ft_putchar_buf(' ');
+	ft_put_name(stats[i], stats[i].LS_MODE, flags);
+	if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
+		ft_put_link(stats[i], flags);
+	ft_putchar_buf('\n');
+}
 
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 {
@@ -74,32 +100,7 @@ void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
 	while (i < ac)
 	{
 		if (OPTL)
-		{			
-			printtype((stats[i].LS_MODE >> 12));
-			ft_mode(stats[i].LS_MODE);
-			printacl(stats[i].path);
-			ft_putchar_buf(' ');
-			ft_putnbrblanks_buf(stats[i].LS_NLINK, blanks[0]);
-			ft_putchar_buf(' ');
-			ft_putstrblanks_buf(stats[i].uid, blanks[1]);
-			ft_putstr_buf("  ");
-			ft_putstrblanks_buf(stats[i].gid, blanks[2]);
-			ft_putstr_buf("  ");
-			if ((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6)
-			 	ft_putdev(stats[i].rdev);
-			else
-				ft_putnbrblanks_buf(stats[i].LS_SIZE, blanks[3]);
-			ft_putchar_buf(' ');
-			if (OPTU)
-				ft_putdate(stats[i].LS_ATIME);
-			else
-				ft_putdate(stats[i].LS_MTIME);
-			ft_putchar_buf(' ');
-			ft_put_name(stats[i], stats[i].LS_MODE, flags);
-			if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
-				ft_put_link(stats[i], flags);
-			ft_putchar_buf('\n');
-		}
+			ft_put_ls_file_l(stats, i, flags, blanks);
 		else
 		{
 			ft_put_name(stats[i], stats[i].LS_MODE, flags);
@@ -127,16 +128,52 @@ void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 		sort_folder(av, ac);
 }
 
+void			ft_opendir_2(char **av, t_uint flags, DIR *dir, int i)
+{
+	t_dirent		*dirent;
+	int 			w;
+	int 			p;
+	t_my_stats		*spoups;
+	char			**coucouille;
+
+	if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 5000)))
+		return ;
+	coucouille = NULL;
+	if (OPTRM)
+		if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 5000)))
+			return ;
+	w = 0;
+	p = 0; 
+	while ((dirent = readdir(dir)))
+	{
+		if (LS_NAME[0] == '.' && !OPTA)
+			;
+		else
+		{
+			spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
+			spoups[w].name = ft_strdup(LS_NAME);
+			if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
+			{
+				coucouille[p] = ft_strdup(spoups[w].path);
+				p++;
+			}
+			w++;
+		}
+	}
+	closedir(dir);
+	ft_ls_file(spoups, flags, w);
+	ft_free(spoups, w);
+	if (OPTRM)
+	{
+		ft_ls_folder(coucouille, flags, p);
+		ft_free_stat(coucouille, p);
+	}
+}
 
 void			ft_opendir(char **av, int ac, t_uint flags)
 {
 	DIR 		*dir;
-	t_dirent	*dirent;
-	t_my_stats 	*spoups;
-	char 		**coucouille;
 	int 		i;
-	int			p;
-	int			w;
 	static int flag = 0;
 
 	i = 0;
@@ -151,40 +188,7 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 			ft_putendl_buf(":");
 		}
 		if ((dir = opendir(av[i])))
-		{
-			if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 5000)))
-				return ;
-			coucouille = NULL;
-			if (OPTRM)
-				if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 5000)))
-					return ;
-			w = 0;
-			p = 0; 
-			while ((dirent = readdir(dir)))
-			{
-				if (LS_NAME[0] == '.' && !OPTA)
-					;
-				else
-				{
-					spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
-					spoups[w].name = ft_strdup(LS_NAME);
-					if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
-					{
-						coucouille[p] = ft_strdup(spoups[w].path);
-						p++;
-					}
-					w++;
-				}
-			}
-			closedir(dir);
-			ft_ls_file(spoups, flags, w);
-			ft_free(spoups, w);
-			if (OPTRM)
-			{
-				ft_ls_folder(coucouille, flags, p);
-				ft_free_stat(coucouille, p);
-			}
-		}
+			ft_opendir_2(av, flags, dir, i);
 		else
 			ft_put_error(av[i]);
 		i++;
@@ -200,7 +204,6 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 	ft_opendir(av, ac, flags);
 	ft_buf(0, NULL, -1);
 	free(infos);
-
 	return (1);
 }
 

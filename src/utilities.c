@@ -6,13 +6,13 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:37:16 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:23:29 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 21:48:10 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-char			**put_dot()
+char			**put_dot(void)
 {
 	char **point;
 
@@ -50,7 +50,7 @@ void			ft_swaptab(char **s1, char **s2)
 
 int				is_folder(char *name)
 {
-	t_stat 		stats;
+	t_stat	stats;
 
 	if (lstat(name, &stats) == -1)
 	{

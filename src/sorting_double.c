@@ -6,16 +6,16 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:21:44 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:22:49 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 21:47:19 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 void			sort_str_ru(t_my_stats *stats, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -35,9 +35,9 @@ void			sort_str_ru(t_my_stats *stats, int size)
 }
 
 void			sort_str_rt(t_my_stats *stats, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -58,8 +58,8 @@ void			sort_str_rt(t_my_stats *stats, int size)
 
 void			sort_str_r(t_my_stats *stats, int size)
 {
-	int flag;
-	int i;
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -79,9 +79,9 @@ void			sort_str_r(t_my_stats *stats, int size)
 }
 
 void			sort_folder_ru(char **av, t_stat *infos, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -102,9 +102,9 @@ void			sort_folder_ru(char **av, t_stat *infos, int size)
 }
 
 void			sort_folder_rt(char **av, t_stat *infos, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)

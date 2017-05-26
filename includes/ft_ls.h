@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 18:58:20 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 20:49:07 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 23:20:35 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,12 @@ typedef unsigned char			t_uchar;
 
 struct s_my_stats
 {
+	DIR 				*dir;
+	int					i;
+	int					p;
+	int					w;
 	t_stat				stat;
+	t_dirent			*dirent;
 	char				*name;
 	char				*path;
 	char				*gid;
@@ -127,5 +132,23 @@ static int		ft_if(int fd, int size, t_uchar **buf, int *p);
 static void		ft_bufcpy(t_uchar *buf, int *p, void *str, int size);
 int				ft_buf(int fd, void *str, int size);
 void			ft_free(t_my_stats *stats, int ac);
+void			ft_free_stat(char **av, int ac);
+char			**put_dot();
+int				ft_nblen(int nb);
+char			*ft_strjoin_ls(char *s1, char *s2);
+void			ft_free_spe(t_my_stats *stats, int ac);
+void		 	get_flags(char *av, t_uint *flags);
+void			ft_put_link(t_my_stats stats, t_uint flags);
+void			printtype(mode_t mode);
+void			ft_mode(mode_t n);
+void			ft_putdate(time_t date);
+void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags);
+void			ft_putdev(dev_t rdev);
+void			ft_putstrblanks_buf(char *str, int blanks);
+void			ft_putnbrblanks_buf(int nbr, int blanks);
+void			printacl(char *file);
+void			ft_put_error(char *str);
+t_stat			*fill_folder_infos(char **av, int ac);
+blkcnt_t		ft_stat(t_my_stats *my_stats, t_uint flags, int ac);
 
 #endif

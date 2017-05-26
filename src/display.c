@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/05/25 21:24:30 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:26:16 by dchirol          ###   ########.fr       */
+/*   Created: 2017/05/26 21:38:22 by dchirol           #+#    #+#             */
+/*   Updated: 2017/05/26 21:45:22 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ void		ft_put_link(t_my_stats stats, t_uint flags)
 	ft_putstr_buf(buf);
 }
 
-void			printtype(mode_t mode)
+void		printtype(mode_t mode)
 {
 	static char			vtype[18] = "?pc?d?b?-?l??????";
 
 	ft_putchar_buf(vtype[mode]);
 }
 
-void			ft_mode(mode_t n)
+void		ft_mode(mode_t n)
 {
 	static char		mode[9];
 
@@ -52,7 +52,7 @@ void			ft_mode(mode_t n)
 	ft_buf(1, mode, 9);
 }
 
-void			ft_putdate(time_t date)
+void		ft_putdate(time_t date)
 {
 	char	*str;
 
@@ -72,15 +72,15 @@ void			ft_putdate(time_t date)
 
 void		ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
 {
-	static char			*vtype[18] = {"", YEL, BLUY, "", CYN, "", 
+	static char			*vtype[18] = {"", YEL, BLUY, "", CYN, "",
 									BLUB, "", "", "",
 									MAG, "", "", "", "", "", ""};
-	
+
 	if (OPTGM)
 	{
 		ft_putstr_buf(vtype[mode >> 12]);
 		if (mode & S_IFREG && !(mode >> 12 == 10) && (mode & 0111))
-				ft_putstr_buf(RED);
+			ft_putstr_buf(RED);
 	}
 	ft_putstr_buf(stat.name);
 	if (OPTP && (mode & S_IFDIR))

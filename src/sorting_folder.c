@@ -6,16 +6,16 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/18 14:50:05 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:22:50 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 21:47:54 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
 void			sort_folder_u(char **av, t_stat *infos, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -36,9 +36,9 @@ void			sort_folder_u(char **av, t_stat *infos, int size)
 }
 
 void			sort_folder_t(char **av, t_stat *infos, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -59,9 +59,9 @@ void			sort_folder_t(char **av, t_stat *infos, int size)
 }
 
 void			sort_folder(char **av, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)
@@ -81,9 +81,9 @@ void			sort_folder(char **av, int size)
 }
 
 void			sort_folder_r(char **av, int size)
-{	
-	int 		flag;
-	int 		i;
+{
+	int		flag;
+	int		i;
 
 	flag = 1;
 	while (flag)

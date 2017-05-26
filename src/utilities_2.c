@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utilities_2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:29:04 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 11:26:02 by David            ###   ########.fr       */
+/*   Updated: 2017/05/26 21:48:30 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,11 @@ void			ft_free_spe(t_my_stats *stats, int ac)
 	free(stats);
 }
 
-void	ft_free(t_my_stats *stats, int ac)
+void			ft_free(t_my_stats *stats, int ac)
 {
 	int i;
 
 	i = 0;
-
 	while (i < ac)
 	{
 		free(stats[i].name);
@@ -73,7 +72,7 @@ void	ft_free(t_my_stats *stats, int ac)
 	free(stats);
 }
 
-void	ft_free_stat(char **av, int ac)
+void			ft_free_stat(char **av, int ac)
 {
 	int i;
 

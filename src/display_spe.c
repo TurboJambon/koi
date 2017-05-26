@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:26:26 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 21:27:19 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 21:38:42 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void		ft_putdev(dev_t rdev)
 	ft_putchar_buf('\t');
 }
 
-void			ft_putstrblanks_buf(char *str, int blanks)
+void		ft_putstrblanks_buf(char *str, int blanks)
 {
 	int		size;
 	char	space[blanks];
@@ -31,7 +31,7 @@ void			ft_putstrblanks_buf(char *str, int blanks)
 	ft_buf(1, str, size);
 }
 
-void			ft_putnbrblanks_buf(int nbr, int blanks)
+void		ft_putnbrblanks_buf(int nbr, int blanks)
 {
 	int		size;
 	char	space[blanks];
@@ -42,7 +42,7 @@ void			ft_putnbrblanks_buf(int nbr, int blanks)
 	ft_putnbr_buf(nbr);
 }
 
-void			printacl(char *file)
+void		printacl(char *file)
 {
 	acl_t		acl;
 	ssize_t		aclvalue;
@@ -59,10 +59,9 @@ void			printacl(char *file)
 			ft_putchar_buf(' ');
 		acl_free((void*)acl);
 	}
-
 }
 
-void			ft_put_error(char *str)
+void		ft_put_error(char *str)
 {
 	if (errno == 2)
 	{
