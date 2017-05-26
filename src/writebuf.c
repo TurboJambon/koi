@@ -3,103 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   writebuf.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
+/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/20 16:56:55 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/25 20:54:49 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/26 11:28:54 by David            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	ft_putstr_buf(char *str)
-{
-	size_t len;
-
-	if (!str)
-		return ;
-	len = ft_strlen(str);
-	ft_buf(1, str, len);
-}
-
-void	ft_putendl_buf(char *str)
-{
-	size_t len;
-
-if (!str)
-		return ;
-	len = ft_strlen(str);
-	ft_buf(1, str, len);
-	ft_buf(1, "\n", 1);
-}
-
-void	ft_putstr_buf_fd(char *str, int fd)
-{
-	size_t len;
-
-if (!str)
-		return ;
-	len = ft_strlen(str);
-	ft_buf(fd, str, len);
-}
-
-void	ft_putchar_buf(char c)
-{
-	ft_buf(1, &c, 1);
-}
-
-void	ft_putchar_buf_fd(char c, int fd)
-{
-	ft_buf(fd, &c, 1);
-}
-
-void	ft_putcharendl_buf_fd(char c, int fd)
-{
-	ft_buf(fd, &c, 1);
-	ft_putchar_buf_fd('\n', fd);
-}
-
-void	ft_putnbr_buf(int n)
-{
-	if (n == -2147483648)
-		ft_putstr_buf("-2147483648");
-	else if (!(n > 2147483647 || n < -2147483648))
-	{
-		if (n < 0)
-		{
-			n = -n;
-			ft_putchar_buf('-');
-		}
-		if (n >= 10)
-		{
-			ft_putnbr_buf(n / 10);
-			ft_putnbr_buf(n % 10);
-		}
-		else
-			ft_putchar_buf(n + '0');
-	}
-}
-
-void	ft_putnbr_base_buf(int n, int base)
-{
-	if (n == -2147483648)
-		ft_putstr_buf("-2147483648");
-	else
-	{
-		if (n < 0)
-		{
-			n = -n;
-			ft_putchar_buf('-');
-		}
-		if (n >= base)
-		{
-			ft_putnbr_base_buf(n / base, base);
-			ft_putnbr_base_buf(n % base, base);
-		}
-		else
-			ft_putchar_buf(n + '0');
-	}
-}
 
 void	ft_putendl_buf_fd(char *str, int fd)
 {
