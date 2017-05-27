@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/27 13:46:12 by David            ###   ########.fr       */
+/*   Updated: 2017/05/27 17:42:33 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,77 +37,20 @@ void			ft_blanks(t_my_stats *stats, int ac, int *blanks)
 	}
 }
 
-
 void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)
 {
-	if (OPTT && OPTR)
-		sort_str_rt(my_stats, ac);
-	else if (OPTU && OPTR)
+	if (OPTF)
+		;
+	else if (OPTU && OPTR && OPTT)
 		sort_str_ru(my_stats, ac);
-	else if (OPTU)
-		sort_str_u(my_stats, ac);
+	else if (OPTT && OPTR)
+		sort_str_rt(my_stats, ac);
 	else if (OPTT)
 		sort_str_t(my_stats, ac);
 	else if (OPTR)
 		sort_str_r(my_stats, ac);
-	else if (OPTF)
-		;
 	else
 		sort_str(my_stats, ac);
-}
-
-void			ft_put_ls_file_l(t_my_stats *stats, int i, t_uint flags, int *blanks)
-{
-	printtype((stats[i].LS_MODE >> 12));
-	ft_mode(stats[i].LS_MODE);
-	printacl(stats[i].path);
-	ft_putchar_buf(' ');
-	ft_putnbrblanks_buf(stats[i].LS_NLINK, blanks[0]);
-	ft_putchar_buf(' ');
-	ft_putstrblanks_buf(stats[i].uid, blanks[1]);
-	ft_putstr_buf("  ");
-	ft_putstrblanks_buf(stats[i].gid, blanks[2]);
-	ft_putstr_buf("  ");
-	if ((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6)
-	 	ft_putdev(stats[i].rdev);
-	else
-		ft_putnbrblanks_buf(stats[i].LS_SIZE, blanks[3]);
-	ft_putchar_buf(' ');
-	if (OPTU)
-		ft_putdate(stats[i].LS_ATIME);
-	else
-	ft_putdate(stats[i].LS_MTIME);
-	ft_putchar_buf(' ');
-	ft_put_name(stats[i], stats[i].LS_MODE, flags);
-	if ((stats[i].LS_MODE & S_IFLNK) == S_IFLNK)
-		ft_put_link(stats[i], flags);
-	ft_putchar_buf('\n');
-}
-
-void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags, blkcnt_t blocks)
-{
-	int		i;
-	int		blanks[4];
-
-	if (OPTL)
-	{
-		ft_blanks(stats, ac, blanks);
-		ft_putstr_buf("total ");
-		ft_putnbr_buf(blocks);
-		ft_putchar_buf('\n');
-	}
-	i = 0;
-	while (i < ac)
-	{
-		if (OPTL)
-			ft_put_ls_file_l(stats, i, flags, blanks);
-		else
-		{
-			ft_put_name(stats[i], stats[i].LS_MODE, flags);
-			ft_putchar_buf('\n');
-		}
-		i++;
-	}
 }
 
 void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
@@ -128,100 +71,9 @@ void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 		sort_folder(av, ac);
 }
 
-void			ft_opendir_3(char **av, t_uint flags, int i, t_opendir *opendir)
-{
-	opendir->p = 0;
-	opendir->w = 0;
-	while ((opendir->dirent = readdir(opendir->dir)))
-	{
-		if (opendir->LS_NAME[0] == '.' && !OPTA)  
-			;
-		else
-		{
-			opendir->spoups[opendir->w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(opendir->LS_NAME) : ft_strjoin_ls(av[i], opendir->LS_NAME);
-			opendir->spoups[opendir->w].name = ft_strdup(opendir->LS_NAME);
-			if (OPTRM && opendir->LS_TYPE == DT_DIR && *(t_uhint*)opendir->LS_NAME != 0x2e && ((*(t_uint*)opendir->LS_NAME) & 0xffffff) != 0x2e2e)
-			{
-				opendir->coucouille[opendir->p] = ft_strdup(opendir->spoups[opendir->w].path);
-				opendir->p++;
-			}
-			opendir->w++;
-		}
-	}
-}
-
-void			ft_opendir_2(char **av, t_uint flags, DIR *dir, int i)
-{
-	t_opendir opendir;
-
-	if (!(opendir.spoups = (t_my_stats*)malloc(sizeof(*opendir.spoups) * 5000)))
-		return ; 
-	opendir.coucouille = NULL;
-	if (OPTRM)
-		if (!(opendir.coucouille = (char**)malloc(sizeof(*opendir.coucouille) * 5000)))
-			return ;
-	opendir.dir = dir;
-	ft_opendir_3(av, flags, i, &opendir);
-	closedir(opendir.dir);
-	ft_ls_file(opendir.spoups, flags, opendir.w);
-	ft_free(opendir.spoups, opendir.w);
-	if (OPTRM)
-	{
-		ft_ls_folder(opendir.coucouille, flags, opendir.p);
-		ft_free_stat(opendir.coucouille, opendir.p);
-	}
-}
-/*
-void		ft_opendir_2_while(struct pw *pw)
-{
-	pw->p = 0;
-	pw->w = 0;
-	while ((dirent = readdir(dir)))
-	{
-		if (LS_NAME[0] == '.' && !OPTA)
-			;
-		else
-		{
-			spoups[pw->w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
-			spoups[pw->w].name = ft_strdup(LS_NAME);
-			if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
-			{
-				coucouille[pw->p] = ft_strdup(spoups[pw->w].path);
-				pw->p++;
-			}
-			pw->w++;
-		}
-	}
-}*/
-
-void			ft_opendir(char **av, int ac, t_uint flags)
-{
-	DIR 		*dir;
-	int 		i;
-	static int flag = 0;
-
-	i = 0;
-	while (i < ac)
-	{
-		if (flag)
-			ft_putstr_buf("\n");
-		flag = 1;
-		if (av[i][0] != '.' && av[i][0] != '\0')
-		{
-			ft_putstr_buf(av[i]);
-			ft_putendl_buf(":");
-		}
-		if ((dir = opendir(av[i])))
-			ft_opendir_2(av, flags, dir, i);
-		else
-			ft_put_error(av[i]);
-		i++;
-	}
-}
-
 int				ft_ls_folder(char **av, t_uint flags, int ac)
 {
-	t_stat 	*infos;
+	t_stat	*infos;
 
 	infos = fill_folder_infos(av, ac);
 	ft_sorts_folder(av, infos, ac, flags);
@@ -235,6 +87,7 @@ int				ft_ls_file(t_my_stats *my_stats, t_uint flags, int ac)
 {
 	blkcnt_t	blocks;
 
+	blocks = 0;
 	if (OPTL || OPTT || OPTU || OPTGM)
 		blocks = ft_stat(my_stats, flags, ac);
 	ft_sorts(my_stats, ac, flags);

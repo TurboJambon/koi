@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:31:52 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 21:41:04 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/27 16:31:08 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void		ft_fill_name(char **av, t_my_stats *my_stats, int *ac, t_uint flags)
 	int i;
 	int tmp;
 
+	flags = 0;
 	tmp = *ac;
 	i = 0;
 	while (i < tmp)
@@ -66,6 +67,7 @@ blkcnt_t	ft_stat(t_my_stats *my_stats, t_uint flags, int ac)
 		blocks += my_stats[i].stat.st_blocks;
 		i++;
 	}
+	flags = 0;
 	return (blocks);
 }
 

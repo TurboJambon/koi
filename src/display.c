@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 21:38:22 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 21:45:22 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/27 16:00:23 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void		ft_put_link(t_my_stats stats, t_uint flags)
 	int		ret;
 	char	buf[256];
 
+	flags = 0;
 	ft_putstr_buf(" -> ");
 	ret = readlink(stats.path, buf, 256);
 	buf[ret] = '\0';

@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 22:59:53 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/27 16:51:55 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ void			param_sorter(char **av, char **avbis, int ac, t_uint flags)
 
 void			sort_params(char **av, int ac, t_uint flags)
 {
-	int										start;
-	char									**avbis;
-	int										tmp;
+	char		**avbis;
 
 	if (!(avbis = (char **)malloc(sizeof(*avbis) * ac)))
 		return ;
@@ -81,7 +79,6 @@ int				main(int ac, char **av)
 	t_uint			flags;
 	static int		i = 1;
 	char			**dot;
-	char			*str;
 
 	flags = 0;
 	if (ac < 2)
