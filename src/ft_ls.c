@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
+/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 23:29:23 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/27 13:46:12 by David            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,47 +128,71 @@ void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 		sort_folder(av, ac);
 }
 
+void			ft_opendir_3(char **av, t_uint flags, int i, t_opendir *opendir)
+{
+	opendir->p = 0;
+	opendir->w = 0;
+	while ((opendir->dirent = readdir(opendir->dir)))
+	{
+		if (opendir->LS_NAME[0] == '.' && !OPTA)  
+			;
+		else
+		{
+			opendir->spoups[opendir->w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(opendir->LS_NAME) : ft_strjoin_ls(av[i], opendir->LS_NAME);
+			opendir->spoups[opendir->w].name = ft_strdup(opendir->LS_NAME);
+			if (OPTRM && opendir->LS_TYPE == DT_DIR && *(t_uhint*)opendir->LS_NAME != 0x2e && ((*(t_uint*)opendir->LS_NAME) & 0xffffff) != 0x2e2e)
+			{
+				opendir->coucouille[opendir->p] = ft_strdup(opendir->spoups[opendir->w].path);
+				opendir->p++;
+			}
+			opendir->w++;
+		}
+	}
+}
+
 void			ft_opendir_2(char **av, t_uint flags, DIR *dir, int i)
 {
-	t_dirent		*dirent;
-	int 			w;
-	int 			p;
-	t_my_stats		*spoups;
-	char			**coucouille;
+	t_opendir opendir;
 
-	if (!(spoups = (t_my_stats*)malloc(sizeof(*spoups) * 5000)))
-		return ;
-	coucouille = NULL;
+	if (!(opendir.spoups = (t_my_stats*)malloc(sizeof(*opendir.spoups) * 5000)))
+		return ; 
+	opendir.coucouille = NULL;
 	if (OPTRM)
-		if (!(coucouille = (char**)malloc(sizeof(*coucouille) * 5000)))
+		if (!(opendir.coucouille = (char**)malloc(sizeof(*opendir.coucouille) * 5000)))
 			return ;
-	w = 0;
-	p = 0; 
+	opendir.dir = dir;
+	ft_opendir_3(av, flags, i, &opendir);
+	closedir(opendir.dir);
+	ft_ls_file(opendir.spoups, flags, opendir.w);
+	ft_free(opendir.spoups, opendir.w);
+	if (OPTRM)
+	{
+		ft_ls_folder(opendir.coucouille, flags, opendir.p);
+		ft_free_stat(opendir.coucouille, opendir.p);
+	}
+}
+/*
+void		ft_opendir_2_while(struct pw *pw)
+{
+	pw->p = 0;
+	pw->w = 0;
 	while ((dirent = readdir(dir)))
 	{
 		if (LS_NAME[0] == '.' && !OPTA)
 			;
 		else
 		{
-			spoups[w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
-			spoups[w].name = ft_strdup(LS_NAME);
+			spoups[pw->w].path = ft_strcmp(av[i], ".") == 0 ? ft_strdup(LS_NAME) : ft_strjoin_ls(av[i], LS_NAME);
+			spoups[pw->w].name = ft_strdup(LS_NAME);
 			if (OPTRM && LS_TYPE == DT_DIR && *(t_uhint*)LS_NAME != 0x2e && ((*(t_uint*)LS_NAME) & 0xffffff) != 0x2e2e)
 			{
-				coucouille[p] = ft_strdup(spoups[w].path);
-				p++;
+				coucouille[pw->p] = ft_strdup(spoups[pw->w].path);
+				pw->p++;
 			}
-			w++;
+			pw->w++;
 		}
 	}
-	closedir(dir);
-	ft_ls_file(spoups, flags, w);
-	ft_free(spoups, w);
-	if (OPTRM)
-	{
-		ft_ls_folder(coucouille, flags, p);
-		ft_free_stat(coucouille, p);
-	}
-}
+}*/
 
 void			ft_opendir(char **av, int ac, t_uint flags)
 {

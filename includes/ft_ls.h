@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
+/*   By: David <David@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 18:58:20 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 23:20:35 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/27 12:01:15 by David            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@
 # define LS_BLOCKS		stat.st_blocks
 
 typedef struct s_my_stats		t_my_stats;
+typedef struct s_opendir		t_opendir;
 typedef struct s_folder_infos	t_folder_infos;
 typedef struct stat				t_stat;
 typedef struct dirent			t_dirent;
@@ -80,14 +81,19 @@ typedef unsigned long int		t_ulint;
 typedef unsigned short int		t_uhint;
 typedef unsigned char			t_uchar;
 
+struct s_opendir
+{
+	t_dirent	*dirent;
+	DIR 		*dir;
+	t_my_stats	*spoups;
+	char		**coucouille;
+	int			w;
+	int			p;
+};
+
 struct s_my_stats
 {
-	DIR 				*dir;
-	int					i;
-	int					p;
-	int					w;
 	t_stat				stat;
-	t_dirent			*dirent;
 	char				*name;
 	char				*path;
 	char				*gid;
