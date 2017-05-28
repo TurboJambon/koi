@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 18:58:20 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/27 17:35:04 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 15:35:56 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ struct			s_opendir
 	char		**coucouille;
 	int			w;
 	int			p;
+	int			maxw;
+	int			maxp;
 };
 
 struct			s_my_stats
