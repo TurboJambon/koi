@@ -6,35 +6,17 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 17:09:59 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 18:32:49 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void			ft_blanks(t_my_stats *stats, int ac, int *blanks)
+void			ft_forbidden(char *str)
 {
-	int		i;
-	int		tmp;
-
-	ft_bzero(blanks, 16);
-	i = 0;
-	while (i < ac)
-	{
-		tmp = ft_nblen(stats[i].LS_NLINK);
-		if (tmp > blanks[0])
-			blanks[0] = tmp;
-		tmp = ft_strlen(stats[i].uid);
-		if (tmp > blanks[1])
-			blanks[1] = tmp;
-		tmp = ft_strlen(stats[i].gid);
-		if (tmp > blanks[2])
-			blanks[2] = tmp;
-		tmp = ft_nblen(stats[i].LS_SIZE);
-		if (tmp > blanks[3])
-			blanks[3] = tmp;
-		i++;
-	}
+	ft_putstr_buf_fd("ls: ", 2);
+	ft_putstr_buf_fd(str, 2);
+	ft_putendl_buf_fd(": No such file or directory", 2);
 }
 
 void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)

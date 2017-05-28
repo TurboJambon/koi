@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/27 15:47:11 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 17:01:42 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 18:18:05 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void			ft_put_ls_file_l(t_my_stats *stats,
 	ft_putstrblanks_buf(stats[i].gid, blanks[2]);
 	ft_putstr_buf("  ");
 	if ((stats[i].LS_MODE >> 12) == 2 || (stats[i].LS_MODE >> 12) == 6)
-		ft_putdev(stats[i].rdev);
+		ft_putdev(stats[i].rdev, blanks);
 	else
 		ft_putnbrblanks_buf(stats[i].LS_SIZE, blanks[3]);
 	ft_putchar_buf(' ');
@@ -45,14 +45,17 @@ void			ft_put_ls_files(t_my_stats *stats, int ac,
 				t_uint flags, blkcnt_t blocks)
 {
 	int		i;
-	int		blanks[4];
+	int		blanks[6];
 
 	if (OPTL)
 	{
 		ft_blanks(stats, ac, blanks);
-		ft_putstr_buf("total ");
-		ft_putnbr_buf(blocks);
-		ft_putchar_buf('\n');
+		if (ac != 0)
+		{
+			ft_putstr_buf("total ");
+			ft_putnbr_buf(blocks);
+			ft_putchar_buf('\n');
+		}
 	}
 	i = 0;
 	while (i < ac)

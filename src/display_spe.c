@@ -6,18 +6,17 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:26:26 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 17:04:36 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 17:43:27 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void		ft_putdev(dev_t rdev)
+void		ft_putdev(dev_t rdev, int *blanks)
 {
-	ft_putnbr_buf(rdev >> 24);
-	ft_putstr_buf(", ");
-	ft_putnbr_buf(rdev & 0xfff);
-	ft_putchar_buf('\t');
+	ft_putnbrblanks_buf(rdev >> 24, blanks[4]);
+	ft_putstr_buf(",");
+	ft_putnbrblanks_buf(rdev & 0xfff, blanks[5]);
 }
 
 void		ft_putstrblanks_buf(char *str, int blanks)
@@ -26,9 +25,9 @@ void		ft_putstrblanks_buf(char *str, int blanks)
 	char	space[blanks];
 
 	size = ft_strlen(str);
+	ft_buf(1, str, size);
 	ft_memset(space, ' ', blanks - size);
 	ft_buf(1, space, blanks - size);
-	ft_buf(1, str, size);
 }
 
 void		ft_putnbrblanks_buf(int nbr, int blanks)

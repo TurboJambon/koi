@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 17:19:20 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 18:41:02 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,10 @@ int				ft_av_to_stats(char **av, t_uint flags, int start)
 void			param_sorter(char **av, char **avbis, int ac, t_uint flags)
 {
 	int			tmp;
-	int			i;
-	int			start;
+	static int	i = 0;
+	static int	start = 0;
 	int			end;
 
-	start = 0;
-	i = 0;
 	end = ac - 1;
 	while (i < ac)
 	{
@@ -44,17 +42,14 @@ void			param_sorter(char **av, char **avbis, int ac, t_uint flags)
 				avbis[end] = av[i];
 			else
 			{
-				ft_putstr_buf_fd("ls: ", 2);
-				ft_putstr_buf_fd(av[i], 2);
-				ft_putendl_buf_fd(": No such file or directory", 2);
+				ft_forbidden(av[i]);
 				avbis[end] = ft_strdup("\0");
 			}
 			end--;
 		}
 		i++;
 	}
-	ft_av_to_stats(avbis, flags, start);
-	ft_ls_folder(avbis + start, flags, ac - start);
+	ft_norme_screw(avbis, flags, start, ac);
 }
 
 void			sort_params(char **av, int ac, t_uint flags)
@@ -83,7 +78,6 @@ int				main(int ac, char **av)
 {
 	static t_uint	flags = 0;
 	static int		i = 1;
-	char			**dot;
 
 	if (ac < 2)
 		return (ft_ls_folder(put_dot(), flags, ac));
@@ -94,14 +88,10 @@ int				main(int ac, char **av)
 	}
 	av += i;
 	ac -= i;
-	if (OPTD)
-		ft_av_to_stats(av, flags, ac);
-	else if (ac == 0)
-	{
-		ft_ls_folder((dot = put_dot()), flags, 1);
-		free(dot[0]);
-		free(dot);
-	}
+	if (ac == 0)
+		main_ac_zero(flags);
+	else if (OPTD)
+		ft_av_to_stats(av, flags, 1);
 	else
 		sort_params(av, ac, flags);
 	ft_buf(0, NULL, -1);

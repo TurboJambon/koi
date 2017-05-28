@@ -6,7 +6,7 @@
 #    By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/05/05 14:20:07 by dchirol           #+#    #+#              #
-#    Updated: 2017/05/27 17:35:02 by dchirol          ###   ########.fr        #
+#    Updated: 2017/05/28 18:29:29 by dchirol          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ SRC =	src/ft_ls.c src/main.c	src/utilities.c	src/sorting.c 	\
 		src/display_spe.c		src/flag.c 		src/init.c 		\
 		src/sorting_double.c 	src/utilities_2.c 				\
 		src/writebuf_2.c 		src/writebuf_3.c 				\
-		src/ft_opendir.c 		src/ft_put_ls.c
+		src/ft_opendir.c 		src/ft_put_ls.c 				\
+		src/others.c
 
 CC = gcc
 ifeq ($(DEBUG), true)

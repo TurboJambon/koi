@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 21:38:22 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 16:43:21 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 18:18:46 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,17 @@ void		ft_put_name(t_my_stats stat, mode_t mode, t_uint flags)
 
 	if (OPTGM)
 	{
-		ft_putstr_buf(vtype[mode >> 12]);
 		if (mode & S_IFREG && !(mode >> 12 == 10) && (mode & 0111))
 			ft_putstr_buf(RED);
+		if (mode & S_IFDIR && (mode & 02))
+		{
+			if (mode & 01000)
+				ft_putstr_buf(BLAG);
+			else
+				ft_putstr_buf(BLAY);
+		}
+		else
+			ft_putstr_buf(vtype[mode >> 12]);
 	}
 	ft_putstr_buf(stat.name);
 	if (OPTP && (mode & S_IFDIR))

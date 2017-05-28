@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/27 15:47:15 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 17:05:26 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 18:25:38 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void			ft_realloc_av(t_opendir *opendir)
 
 	opendir->maxp *= 10;
 	tmp = (char**)malloc(sizeof(char*) * (opendir->maxp));
-	ft_memmove(tmp, opendir->coucouille, (sizeof(char**) * opendir->maxp) / 10);
-	free(opendir->coucouille);
-	opendir->coucouille = tmp;
+	ft_memmove(tmp, COUCOUILLE, (sizeof(char**) * opendir->maxp) / 10);
+	free(COUCOUILLE);
+	COUCOUILLE = tmp;
 }
 
 void			ft_realloc_mystats(t_opendir *opendir)
@@ -29,9 +29,9 @@ void			ft_realloc_mystats(t_opendir *opendir)
 
 	opendir->maxw *= 10;
 	tmp = (t_my_stats*)malloc(sizeof(t_my_stats) * (opendir->maxw));
-	ft_memmove(tmp, opendir->spoups, (sizeof(t_my_stats) * opendir->maxw) / 10);
-	free(opendir->spoups);
-	opendir->spoups = tmp;
+	ft_memmove(tmp, SPOUPS, (sizeof(t_my_stats) * opendir->maxw) / 10);
+	free(SPOUPS);
+	SPOUPS = tmp;
 }
 
 void			ft_opendir_3(char **av, t_uint flags, int i, t_opendir *opendir)
@@ -42,23 +42,22 @@ void			ft_opendir_3(char **av, t_uint flags, int i, t_opendir *opendir)
 			;
 		else
 		{
-			opendir->spoups[opendir->w].path = ft_strcmp(av[i], ".") == 0 ?
+			SPOUPS[W].path = ft_strcmp(av[i], ".") == 0 ?
 			ft_strdup(opendir->LS_NAME) :
 			ft_strjoin_ls(av[i], opendir->LS_NAME);
-			opendir->spoups[opendir->w].name =
-			ft_strdup(opendir->LS_NAME);
+			SPOUPS[W].name = ft_strdup(opendir->LS_NAME);
 			if (OPTRM && opendir->LS_TYPE == DT_DIR &&
 			*(t_uhint*)opendir->LS_NAME != 0x2e
 			&& ((*(t_uint*)opendir->LS_NAME) & 0xffffff) != 0x2e2e)
 			{
-				opendir->coucouille[opendir->p] =
-				ft_strdup(opendir->spoups[opendir->w].path);
-				opendir->p++;
-				if (opendir->p >= opendir->maxp)
+				COUCOUILLE[P] =
+				ft_strdup(SPOUPS[W].path);
+				P++;
+				if (P >= opendir->maxp)
 					ft_realloc_av(opendir);
 			}
-			opendir->w++;
-			if (opendir->w >= opendir->maxw)
+			W++;
+			if (W >= opendir->maxw)
 				ft_realloc_mystats(opendir);
 		}
 	}

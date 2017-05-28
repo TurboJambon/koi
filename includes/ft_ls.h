@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 18:58:20 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 15:35:56 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 18:40:03 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define CYN   			"\x1B[1;96m"
 # define BLUB  			"\x1B[34;46m"
 # define BLUY  			"\x1B[34;43m"
+# define BLAY  			"\x1B[30;43m"
+# define BLAG  			"\x1B[30;42m"
 # define RESET 			"\x1B[0m"
 
 # define LSL			0x01
@@ -70,6 +72,10 @@
 # define LS_MTIME		stat.st_mtime
 # define LS_ATIME		stat.st_atime
 # define LS_BLOCKS		stat.st_blocks
+# define SPOUPS			opendir->spoups
+# define COUCOUILLE		opendir->coucouille
+# define W				opendir->w
+# define P				opendir->p
 
 typedef struct s_my_stats		t_my_stats;
 typedef struct s_opendir		t_opendir;
@@ -151,7 +157,7 @@ void			printtype(mode_t mode);
 void			ft_mode(mode_t n);
 void			ft_putdate(time_t date);
 void			ft_put_name(t_my_stats stat, mode_t mode, t_uint flags);
-void			ft_putdev(dev_t rdev);
+void			ft_putdev(dev_t rdev, int *blanks);
 void			ft_putstrblanks_buf(char *str, int blanks);
 void			ft_putnbrblanks_buf(int nbr, int blanks);
 void			printacl(char *file);
@@ -163,5 +169,9 @@ void			ft_blanks(t_my_stats *stats, int ac, int *blanks);
 void			ft_put_ls_files(t_my_stats *stats, int ac, t_uint flags,
 				blkcnt_t blocks);
 void			ft_opendir(char **av, int ac, t_uint flags);
+void			main_ac_zero(t_uint flags);
+int				ft_av_to_stats(char **av, t_uint flags, int start);
+void			ft_forbidden(char *str);
+void			ft_norme_screw(char **avbis, t_uint flags, int start, int ac);
 
 #endif
