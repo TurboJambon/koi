@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/05 18:37:16 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/26 21:48:10 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 16:40:23 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,6 @@ int				is_folder(char *name)
 	t_stat	stats;
 
 	if (lstat(name, &stats) == -1)
-	{
-		perror(NULL);
 		return (-1);
-	}
 	return (S_ISDIR(stats.st_mode));
 }

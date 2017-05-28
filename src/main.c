@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/27 16:51:55 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 16:50:03 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,10 @@ void			param_sorter(char **av, char **avbis, int ac, t_uint flags)
 			if (tmp == 1)
 				avbis[end] = av[i];
 			else
+			{
+				ft_put_error(av[i]);
 				avbis[end] = ft_strdup("\0");
+			}
 			end--;
 		}
 		i++;

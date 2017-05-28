@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/27 15:47:15 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 16:12:40 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 16:46:35 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		if ((dir = opendir(av[i])))
 			ft_opendir_2(av, flags, dir, i);
 		else
-			ft_put_error(av[i]);
+			;
 		i++;
 	}
 }
