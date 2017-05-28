@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 17:05:17 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 17:19:20 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,10 @@ int				check_folder(char *name, t_uint flags)
 
 int				main(int ac, char **av)
 {
-	t_uint			flags;
+	static t_uint	flags = 0;
 	static int		i = 1;
 	char			**dot;
 
-	flags = 0;
 	if (ac < 2)
 		return (ft_ls_folder(put_dot(), flags, ac));
 	while (i < ac && av[i][0] == '-' && av[i][1] != '\0')
@@ -95,7 +94,9 @@ int				main(int ac, char **av)
 	}
 	av += i;
 	ac -= i;
-	if (ac == 0)
+	if (OPTD)
+		ft_av_to_stats(av, flags, ac);
+	else if (ac == 0)
 	{
 		ft_ls_folder((dot = put_dot()), flags, 1);
 		free(dot[0]);
