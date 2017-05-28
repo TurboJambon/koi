@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:54 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 19:15:50 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 19:45:08 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,7 @@ void			ft_sorts(t_my_stats *my_stats, int ac, t_uint flags)
 
 void			ft_sorts_folder(char **av, t_stat *infos, int ac, t_uint flags)
 {
-	if (OPTF)
-		return ;
-	else if (OPTU && OPTR && OPTT)
+	if (OPTU && OPTR && OPTT)
 		sort_folder_ru(av, infos, ac);
 	else if (OPTT && OPTR)
 		sort_folder_rt(av, infos, ac);
@@ -58,8 +56,7 @@ int				ft_ls_folder(char **av, t_uint flags, int ac)
 	t_stat	*infos;
 
 	infos = fill_folder_infos(av, ac);
-	if (!OPTF)
-		ft_sorts_folder(av, infos, ac, flags);
+	ft_sorts_folder(av, infos, ac, flags);
 	ft_opendir(av, ac, flags);
 	ft_buf(0, NULL, -1);
 	free(infos);

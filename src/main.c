@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 19:13:41 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 19:45:27 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,15 +90,8 @@ int				main(int ac, char **av)
 	ac -= i;
 	if (ac == 0)
 		main_ac_zero(flags);
-	else if (OPTD)
-		ft_av_to_stats(av, flags, 1);
 	else
-	{
-		if (OPTF)
-			ft_norme_screw(av, flags, ac, ac);
-		else
-			sort_params(av, ac, flags);
-	}
+		sort_params(av, ac, flags);
 	ft_buf(0, NULL, -1);
 	return (0);
 }
