@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/27 15:47:15 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 18:25:38 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 19:11:38 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void			ft_opendir_3(char **av, t_uint flags, int i, t_opendir *opendir)
 {
 	while ((opendir->dirent = readdir(opendir->dir)))
 	{
-		if (opendir->LS_NAME[0] == '.' && !OPTA)
+		if (opendir->LS_NAME[0] == '.' && (!OPTA && !OPTF))
 			;
 		else
 		{

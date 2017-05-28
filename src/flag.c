@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/26 11:56:36 by David             #+#    #+#             */
-/*   Updated: 2017/05/28 17:19:05 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 19:10:15 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void			fill_tab(t_uint **tab)
 	(*tab)['f'] = LSF;
 	(*tab)['d'] = LSD;
 	(*tab)['R'] = LSRM;
-	(*tab)['g'] = LSG;
 	(*tab)['G'] = LSGM;
 	(*tab)['p'] = LSP;
 }
@@ -43,7 +42,7 @@ void			get_flags(char *av, t_uint *flags)
 		{
 			ft_putstr_buf("ls: illegal option -- ");
 			ft_putchar_buf(*av);
-			ft_putendl_buf("\nusage: ls [-GRaflprtu] [file ...]");
+			ft_putendl_buf("\nusage: ls [-GRadflprtu] [file ...]");
 			ft_buf(0, NULL, -1);
 			exit(0);
 		}
