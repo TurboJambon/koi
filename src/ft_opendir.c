@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/27 15:47:15 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 16:46:35 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 17:05:26 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		if (flag)
 			ft_putstr_buf("\n");
 		flag = 1;
-		if (av[i][0] != '\0' && ft_strcmp(av[i], ".") != 0)
+		if (ac > 1 && av[i][0] != '\0' && ft_strcmp(av[i], ".") != 0)
 		{
 			ft_putstr_buf(av[i]);
 			ft_putendl_buf(":");
@@ -113,7 +113,7 @@ void			ft_opendir(char **av, int ac, t_uint flags)
 		if ((dir = opendir(av[i])))
 			ft_opendir_2(av, flags, dir, i);
 		else
-			;
+			ft_put_error(av[i]);
 		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/25 21:26:26 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 16:45:24 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 17:04:36 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,7 @@ void		printacl(char *file)
 
 void		ft_put_error(char *str)
 {
-	if (errno == 2)
-	{
-		ft_putstr_buf_fd("ls: ", 2);
-		ft_putstr_buf_fd(str, 2);
-		ft_putendl_buf_fd(": No such file or directory", 2);
-	}
-	else if (errno == 13)
+	if (errno == 13)
 	{
 		ft_putstr_buf_fd("ls: ", 2);
 		ft_putstr_buf_fd(str, 2);

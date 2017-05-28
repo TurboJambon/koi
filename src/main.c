@@ -6,7 +6,7 @@
 /*   By: dchirol <dchirol@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/13 19:01:13 by dchirol           #+#    #+#             */
-/*   Updated: 2017/05/28 16:50:03 by dchirol          ###   ########.fr       */
+/*   Updated: 2017/05/28 17:05:17 by dchirol          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ void			param_sorter(char **av, char **avbis, int ac, t_uint flags)
 				avbis[end] = av[i];
 			else
 			{
-				ft_put_error(av[i]);
+				ft_putstr_buf_fd("ls: ", 2);
+				ft_putstr_buf_fd(av[i], 2);
+				ft_putendl_buf_fd(": No such file or directory", 2);
 				avbis[end] = ft_strdup("\0");
 			}
 			end--;
